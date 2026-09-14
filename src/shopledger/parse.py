@@ -166,3 +166,17 @@ def product_detail(payload: dict) -> dict:
         "skus": skus,
         "videos": videos,
     }
+
+
+def video_stats(payload: dict) -> dict | None:
+    """Pull play and like counts out of /v2/tiktok/video.
+
+    Likes live under `digg_count`, which is TikTok's own name for the field.
+    """
+    stats = dig(payload, "aweme_detail", "statistics", default=None)
+    if not isinstance(stats, dict):
+        return None
+    plays = integer(stats.get("play_count"))
+    if plays is None:
+        return None
+    return {"play_count": plays, "like_count": integer(stats.get("digg_count")) or 0}

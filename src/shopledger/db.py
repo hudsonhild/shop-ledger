@@ -208,6 +208,28 @@ def video_pair(conn: sqlite3.Connection, item_id: str) -> list[sqlite3.Row]:
     ).fetchall()
 
 
+def orphan_videos(conn: sqlite3.Connection, window_days: int) -> list[sqlite3.Row]:
+    """Affiliate videos that fell out of a product's top 18 but are still in window.
+
+    Without this the panel silently shrinks and attribution history breaks: a
+    video slipping to 19th reads identically to a video that stopped existing.
+    """
+    return conn.execute(
+        """
+        SELECT * FROM video
+        WHERE in_panel = 0
+          AND is_affiliate = 1
+          AND julianday('now') - julianday(last_seen) <= ?
+        ORDER BY last_seen DESC
+        """,
+        (window_days,),
+    ).fetchall()
+
+
+def touch_video(conn: sqlite3.Connection, item_id: str, seen: str) -> None:
+    conn.execute("UPDATE video SET last_seen = ? WHERE item_id = ?", (seen, item_id))
+
+
 def views_per_unit_history(conn: sqlite3.Connection, product_id: str) -> list[float]:
     """Historical views-per-unit for a product, used to calibrate confidence."""
     rows = conn.execute(

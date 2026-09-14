@@ -75,6 +75,8 @@ Everything is read from `.env` or the environment. See `.env.example` for the fu
 - `SHOPLEDGER_MIN_CREDITS` — abort the run below this balance rather than write a partial day. Defaults to 200.
 - `SHOPLEDGER_DEFAULT_VPU` — views per unit sold, used only to bootstrap confidence before a product has its own history.
 - `SHOPLEDGER_ENGAGEMENT_K` — how strongly a good like rate outweighs raw reach in attribution. Set to 0 to split purely by views.
+- `SHOPLEDGER_PANEL_WINDOW_DAYS` — how long a video that fell out of a product's top 18 keeps being sampled. Defaults to 14.
+- `SHOPLEDGER_PANEL_BUDGET` — cap on those re-samples per day, so a long tail of orphans cannot eat tomorrow's credits. Defaults to 25.
 
 Your key is read at runtime and is never written to the database or the dashboard.
 
@@ -101,12 +103,14 @@ Pick a fixed hour and keep it. A job that drifts from 02:00 to 04:00 turns a 24-
 
 **Attribution.** For each product, affiliate-flagged videos are weighted by view delta and like rate, then given a share of the day's units. A coverage coefficient decides how much of the day the panel can plausibly explain, and whatever is left over stays unattributed. Confidence below 0.3 means the panel does not explain the sales, and the dashboard says so instead of picking a winner.
 
+**The video panel only grows.** A video that drops out of a product's top 18 keeps being sampled directly for two weeks. Without that, a video slipping to 19th reads identically to a video that stopped existing, and the attribution history breaks silently.
+
 **Raw responses are kept.** Every snapshot stores its full JSON, so a change to the model can be replayed across your entire history without spending a credit refetching.
 
 ## Known limits
 
 - **US TikTok Shop only.** The product detail endpoint returns nothing for other regions. Those products are skipped and cost nothing.
-- **18 videos per product.** The related-videos list is ranked and truncated, so a video that slips to 19th disappears from the response. Videos already in your database keep their history.
+- **18 videos per product.** The related-videos list is ranked and truncated, so a video that slips to 19th disappears from the response. Shop Ledger keeps sampling those orphans directly for `SHOPLEDGER_PANEL_WINDOW_DAYS`, so the panel only ever grows, but the initial discovery of a video still depends on it reaching a product's top 18 at least once.
 - **Sold-out products look dead.** A product that has run out stops selling, which reads identically to a product nobody wants. Check stock before writing one off.
 - **Signed media URLs expire.** Thumbnails are re-resolved each render and fall back to a placeholder. Video links are the durable page URLs and do not expire.
 - **Attribution is an inference.** It will never be exact, and the design goal is that it is honest about that rather than confident and wrong.
@@ -114,6 +118,12 @@ Pick a fixed hour and keep it. A job that drifts from 02:00 to 04:00 turns a 24-
 ## Terms of service
 
 This reads publicly visible TikTok Shop data through a third-party API. That runs against TikTok's terms of service. It is built for personal product research and is not affiliated with, endorsed by, or connected to TikTok, ByteDance, Kalodata, FastMoss or EchoTik. You are responsible for how you use it.
+
+## Design
+
+The dashboard copies [ElevenLabs](https://elevenlabs.io)' app surface: their palette, their 14/20 Inter type scale, hairlines instead of shadows, greyed icons that only darken on the active row, and colour confined to the chart ramp and status pills. Icons are drawn on their measured grid — `viewBox="0 0 18 18"`, `stroke-width="1.5"`, round caps and joins, `currentColor` — in `src/shopledger/icons.py`.
+
+The whole dashboard is one template at `src/shopledger/templates/dashboard.html` with `__TOKEN__` placeholders. There is no build step and no framework, so restyling it means editing one file.
 
 ## Development
 

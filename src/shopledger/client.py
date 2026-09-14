@@ -106,9 +106,11 @@ class Client:
         url = f"https://www.tiktok.com/shop/pdp/{product_id}"
         return self._get("/v1/tiktok/product", {"url": url})
 
-    def video(self, item_id: str, author_id: str) -> dict[str, Any]:
-        """Used only for videos that have dropped out of a product's top 18."""
-        url = f"https://www.tiktok.com/@{author_id}/video/{item_id}"
+    def video(self, url: str) -> dict[str, Any]:
+        """Used only for videos that have dropped out of a product's top 18.
+
+        Takes the stored page URL, which already carries the author id.
+        """
         return self._get("/v2/tiktok/video", {"url": url})
 
     def check_credits(self) -> int | None:

@@ -40,6 +40,8 @@ class Config:
     min_credits: int
     default_vpu: float
     engagement_k: float
+    panel_window_days: int
+    panel_budget: int
 
     @property
     def db_path(self) -> Path:
@@ -87,4 +89,6 @@ def load(require_key: bool = True) -> Config:
         min_credits=int(_num("SHOPLEDGER_MIN_CREDITS", 200)),
         default_vpu=_num("SHOPLEDGER_DEFAULT_VPU", 2000),
         engagement_k=_num("SHOPLEDGER_ENGAGEMENT_K", 10),
+        panel_window_days=int(_num("SHOPLEDGER_PANEL_WINDOW_DAYS", 14)),
+        panel_budget=int(_num("SHOPLEDGER_PANEL_BUDGET", 25)),
     )

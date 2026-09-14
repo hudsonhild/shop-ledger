@@ -13,6 +13,8 @@ from datetime import datetime
 from importlib import resources
 from pathlib import Path
 
+from .icons import icon, wordmark
+
 WINDOW_DAYS = 7
 
 
@@ -98,8 +100,7 @@ def _strip(series: dict) -> str:
 
 def _empty(title: str, hint: str) -> str:
     return (
-        '<div class="empty"><svg viewBox="0 0 24 24" aria-hidden="true">'
-        '<path d="M4 20V10M10 20V5M16 20v-7M22 20H2"/></svg>'
+        f'<div class="empty">{icon("chart-empty", 32)}'
         f"<p>{esc(title)}</p><p>{esc(hint)}</p></div>"
     )
 
@@ -135,7 +136,7 @@ def _movers(conn: sqlite3.Connection, day: str | None) -> str:
         thumb = (
             f'<img class="thumb" src="{esc(row["image_url"])}" alt="" loading="lazy">'
             if row["image_url"]
-            else '<span class="thumb ph"><svg viewBox="0 0 18 18"><path d="M3 13l4-4 3 3 5-5"/></svg></span>'
+            else f'<span class="thumb ph">{icon("image", 15)}</span>'
         )
         sub = " · ".join(
             part for part in (row["seller_name"], row["category_name"], row["method"]) if part
@@ -179,7 +180,7 @@ def _videos(conn: sqlite3.Connection, day: str | None) -> str:
         thumb = (
             f'<img class="thumb tall" src="{esc(row["cover_image_url"])}" alt="" loading="lazy">'
             if row["cover_image_url"]
-            else '<span class="thumb tall ph"><svg viewBox="0 0 18 18"><path d="M6.5 4.5 13 9l-6.5 4.5z"/></svg></span>'
+            else f'<span class="thumb tall ph">{icon("play", 15)}</span>'
         )
         title = row["title"] or row["product_title"] or "Untitled video"
         handle = f'@{row["author_name"]}' if row["author_name"] else "unknown creator"
@@ -277,6 +278,15 @@ def render(conn: sqlite3.Connection, out_path: Path, credits: int | None = None)
         "__VIDEOS__": _videos(conn, latest),
         "__HEALTH__": _health(conn, latest, credits),
         "__SERIES__": json.dumps(series, separators=(",", ":")),
+        "__WORDMARK__": wordmark(16),
+        "__I_HOME__": icon("home"),
+        "__I_TRENDING__": icon("trending"),
+        "__I_PLAY__": icon("play"),
+        "__I_USERS__": icon("users"),
+        "__I_PULSE__": icon("pulse"),
+        "__I_CAL__": icon("calendar", 14),
+        "__I_CHEV__": icon("chevron-down", 14),
+        "__I_LAYERS__": icon("layers", 14),
     }
     for token, value in replacements.items():
         template = template.replace(token, value)

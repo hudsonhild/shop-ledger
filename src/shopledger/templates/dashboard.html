@@ -55,8 +55,8 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--fg);outline-offset:
   display:flex; flex-direction:column; gap:22px;
 }
 .brand{display:flex;align-items:center;gap:8px;padding:4px 8px 0;font-weight:500;font-size:14px;letter-spacing:-.01em}
-.brand .glyph{width:16px;height:16px;flex:0 0 auto}
-.brand .glyph rect{fill:var(--fg)}
+.brand .glyph{flex:0 0 auto}
+
 .navgroup{display:flex;flex-direction:column;gap:2px}
 .navgroup h6{
   margin:0 0 6px; padding:0 8px;
@@ -70,8 +70,8 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--fg);outline-offset:
 }
 .navgroup a:hover{background:var(--muted)}
 .navgroup a.on{background:var(--muted);font-weight:500}
-.navgroup svg{width:15px;height:15px;stroke:var(--fg2);stroke-width:1.5;fill:none;flex:0 0 auto}
-.navgroup a.on svg{stroke:var(--fg)}
+.navgroup svg{color:var(--fg2);flex:0 0 auto}
+.navgroup a.on svg{color:var(--fg)}
 .side .foot{margin-top:auto;padding:0 8px;font-family:var(--mono);font-size:10.5px;line-height:16px;color:var(--fg2)}
 
 /* ---------------- main ---------------- */
@@ -103,7 +103,7 @@ h2{font-family:var(--display);font-weight:500;font-size:16px;line-height:22px;le
   white-space:nowrap;cursor:default;transition:background .15s cubic-bezier(.4,0,.2,1);
 }
 .ctl .lbl{color:var(--fg2);font-weight:400}
-.ctl svg{width:14px;height:14px;stroke:var(--fg2);stroke-width:1.5;fill:none}
+.ctl svg{color:var(--fg2);flex:0 0 auto}
 
 .badge{display:inline-flex;align-items:center;height:22px;padding:0 9px;border-radius:6px;font-size:12px;font-weight:500;line-height:16px;white-space:nowrap}
 .badge.up{background:var(--ok-bg);color:var(--ok)}
@@ -148,7 +148,7 @@ h2{font-family:var(--display);font-weight:500;font-size:16px;line-height:22px;le
 }
 .thumb.tall{width:40px;height:56px}
 .ph{display:flex;align-items:center;justify-content:center}
-.ph svg{width:15px;height:15px;stroke:var(--fg2);stroke-width:1.5;fill:none}
+.ph svg{color:var(--fg2)}
 .body{flex:1 1 auto;min-width:0}
 .body .t{font-size:13.5px;line-height:19px;font-weight:500;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 a.t:hover{text-decoration:underline;text-underline-offset:2px}
@@ -165,7 +165,7 @@ a.t:hover{text-decoration:underline;text-underline-offset:2px}
 .health .u .v{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
 
 .empty{padding:40px 16px;text-align:center;color:var(--fg2)}
-.empty svg{width:34px;height:34px;stroke:var(--fg2);stroke-width:1.25;fill:none;opacity:.55;margin-bottom:10px}
+.empty svg{color:var(--fg2);opacity:.5;margin-bottom:10px}
 .empty p{margin:0;font-size:13px;line-height:20px}
 .empty p+p{margin-top:4px;font-size:12px}
 
@@ -181,24 +181,24 @@ a.t:hover{text-decoration:underline;text-underline-offset:2px}
 
   <nav class="side">
     <div class="brand">
-      <svg class="glyph" viewBox="0 0 16 16" aria-hidden="true"><rect x="1" y="6" width="3.2" height="9" rx="1"/><rect x="6.4" y="2" width="3.2" height="13" rx="1"/><rect x="11.8" y="9" width="3.2" height="6" rx="1"/></svg>
+      __WORDMARK__
       Shop Ledger
     </div>
 
     <div class="navgroup">
-      <a class="on" href="#"><svg viewBox="0 0 18 18"><path d="M3 9.5 9 4l6 5.5V15H3z"/></svg>Today</a>
+      <a class="on" href="#">__I_HOME__Today</a>
     </div>
 
     <div class="navgroup">
       <h6>Explore</h6>
-      <a href="#movers"><svg viewBox="0 0 18 18"><path d="M3 13.5 7 8l3 3 5-6.5"/></svg>Products</a>
-      <a href="#videos"><svg viewBox="0 0 18 18"><path d="M6.5 4.5 13 9l-6.5 4.5z"/></svg>Videos</a>
-      <a href="#videos"><svg viewBox="0 0 18 18"><circle cx="9" cy="6" r="2.6"/><path d="M3.6 14.6c.6-2.7 2.8-4.1 5.4-4.1s4.8 1.4 5.4 4.1"/></svg>Creators</a>
+      <a href="#movers">__I_TRENDING__Products</a>
+      <a href="#videos">__I_PLAY__Videos</a>
+      <a href="#videos">__I_USERS__Creators</a>
     </div>
 
     <div class="navgroup">
       <h6>Monitor</h6>
-      <a href="#health"><svg viewBox="0 0 18 18"><path d="M2.5 9h3l2-4.5L10.5 14l2-5h3"/></svg>Data health</a>
+      <a href="#health">__I_PULSE__Data health</a>
     </div>
 
     <div class="foot">__FOOT__</div>
@@ -217,9 +217,9 @@ a.t:hover{text-decoration:underline;text-underline-offset:2px}
       <h1>__HEADLINE__</h1>
 
       <div class="ctlbar">
-        <span class="ctl"><span class="lbl">Window</span>__WINDOW__</span>
-        <span class="ctl"><span class="lbl">Granularity</span>Day</span>
-        <span class="ctl"><span class="lbl">Panel</span>__PANEL__ tracked</span>
+        <span class="ctl">__I_CAL__<span class="lbl">Window</span>__WINDOW__</span>
+        <span class="ctl"><span class="lbl">Granularity</span>Day__I_CHEV__</span>
+        <span class="ctl">__I_LAYERS__<span class="lbl">Panel</span>__PANEL__ tracked</span>
       </div>
 
       <div class="card">

@@ -11,7 +11,7 @@ import sqlite3
 
 from . import db
 from .client import ApiError, Client, NotFound, OutOfCredits
-from .parse import product_detail
+from .parse import product_detail, video_stats
 
 
 def pull(conn: sqlite3.Connection, client: Client, min_credits: int) -> dict:
@@ -109,3 +109,50 @@ def pull(conn: sqlite3.Connection, client: Client, min_credits: int) -> dict:
         "missing": missing,
         "failures": failures,
     }
+
+
+def persist_panel(
+    conn, client: Client, window_days: int, min_credits: int, budget: int
+) -> dict:
+    """Keep sampling affiliate videos that fell out of a product's top 18.
+
+    `related_videos` is ranked and truncated, so a video slipping to 19th
+    disappears from the response and a naive pipeline reads that as the video
+    ceasing to exist. Once an item is in the database it keeps its history for
+    as long as it stays inside the attribution window, so the panel only grows.
+
+    Capped by `budget` so a long tail of orphans cannot quietly eat the credit
+    balance the tracked panel needs tomorrow.
+    """
+    orphans = db.orphan_videos(conn, window_days)[:budget]
+    captured_at = db.now_iso()
+    day = db.day_of(captured_at)
+
+    kept = 0
+    gone: list[str] = []
+    rows: list[dict] = []
+
+    for video in orphans:
+        if client.credits is not None and client.credits < min_credits:
+            break
+        try:
+            payload = client.video(video["url"])
+        except NotFound:
+            gone.append(video["item_id"])
+            continue
+        except OutOfCredits:
+            break
+        except ApiError:
+            continue
+
+        stats = video_stats(payload)
+        if stats is None:
+            continue
+        rows.append({"item_id": video["item_id"], "captured_at": captured_at, "day": day, **stats})
+        db.touch_video(conn, video["item_id"], captured_at)
+        kept += 1
+
+    if rows:
+        db.insert_video_snapshot(conn, rows)
+
+    return {"orphans": len(orphans), "kept": kept, "gone": len(gone)}

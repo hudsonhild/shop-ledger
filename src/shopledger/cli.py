@@ -10,6 +10,7 @@ from pathlib import Path
 
 from . import config, db, render, resolve, sweep
 from .client import ApiError, Client, OutOfCredits
+from .pull import persist_panel
 from .pull import pull as pull_products
 
 BANNER = "shop-ledger"
@@ -73,6 +74,9 @@ def cmd_pull(args: argparse.Namespace) -> int:
         with db.session(cfg.db_path) as conn:
             db.start_run(conn, run_id, "pull", client.credits)
             result = pull_products(conn, client, cfg.min_credits)
+            panel = persist_panel(
+                conn, client, cfg.panel_window_days, cfg.min_credits, cfg.panel_budget
+            )
             db.finish_run(
                 conn, run_id, client.credits, client.calls, len(result["failures"]), "pull"
             )
@@ -83,6 +87,11 @@ def cmd_pull(args: argparse.Namespace) -> int:
     _say(
         f"pulled {result['pulled']}/{result['of']} products, {result['videos']} videos"
     )
+    if panel["orphans"]:
+        _say(
+            f"  panel persistence: re-sampled {panel['kept']}/{panel['orphans']} "
+            f"videos that fell out of the top 18"
+        )
     if result["missing"]:
         _say(f"  {len(result['missing'])} not available in the US region, skipped")
     for failure in result["failures"][:5]:

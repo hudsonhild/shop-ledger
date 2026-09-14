@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import unittest
 
-from shopledger.parse import dig, integer, money, product_detail, search_product
+from shopledger.parse import dig, integer, money, product_detail, search_product, video_stats
 
 # Trimmed from a real /v1/tiktok/product response, 14 September 2026.
 DETAIL = {
@@ -137,6 +137,22 @@ class SearchProduct(unittest.TestCase):
     def test_falls_back_to_a_constructed_pdp_url(self):
         row = search_product({"product_id": "99"})
         self.assertEqual(row["pdp_url"], "https://www.tiktok.com/shop/pdp/99")
+
+
+
+class VideoStats(unittest.TestCase):
+    """Likes live under digg_count on /v2/tiktok/video, not like_count."""
+
+    def test_reads_statistics(self):
+        stats = video_stats(
+            {"aweme_detail": {"statistics": {"play_count": 31865405, "digg_count": 1190044}}}
+        )
+        self.assertEqual(stats, {"play_count": 31865405, "like_count": 1190044})
+
+    def test_returns_none_when_statistics_are_missing(self):
+        self.assertIsNone(video_stats({}))
+        self.assertIsNone(video_stats({"aweme_detail": {}}))
+        self.assertIsNone(video_stats({"aweme_detail": {"statistics": {"digg_count": 5}}}))
 
 
 if __name__ == "__main__":
