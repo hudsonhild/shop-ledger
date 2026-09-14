@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>__TITLE__</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500&family=Inter:wght@400;500&family=Geist+Mono:wght@400&display=swap">
+<style>
+:root{
+  --bg:#FFFFFF; --side:#FAFAFA; --fg:#0F0F10; --fg2:rgba(0,0,0,.53);
+  --muted:rgba(0,0,0,.04); --border:rgba(0,0,0,.075); --control:rgba(0,0,0,.12);
+  --primary:hsl(0 0% 18%); --on-primary:#FAFAFA;
+  --c1:#93C5FD; --c2:#3B82F6; --c3:#2563EB; --c4:#1D4ED8;
+  --ok:#16803D; --ok-bg:rgba(22,128,61,.10);
+  --warn-bg:rgba(0,0,0,.05);
+  --bad:#DC2626; --bad-bg:rgba(220,38,38,.10);
+  --display:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --body:"Inter","Helvetica Neue",Arial,sans-serif;
+  --mono:"Geist Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:hsl(240 3% 6%); --side:hsl(240 6% 10%); --fg:#FFFFFF; --fg2:rgba(255,255,255,.64);
+  --muted:rgba(255,255,255,.05); --border:rgba(255,255,255,.075); --control:rgba(255,255,255,.13);
+  --primary:hsl(210 20% 98%); --on-primary:hsl(240 3% 6%);
+  --ok:#4ADE80; --ok-bg:rgba(74,222,128,.12);
+  --warn-bg:rgba(255,255,255,.06);
+  --bad:#F87171; --bad-bg:rgba(248,113,113,.12);
+}}
+:root[data-theme="dark"]{
+  --bg:hsl(240 3% 6%); --side:hsl(240 6% 10%); --fg:#FFFFFF; --fg2:rgba(255,255,255,.64);
+  --muted:rgba(255,255,255,.05); --border:rgba(255,255,255,.075); --control:rgba(255,255,255,.13);
+  --primary:hsl(210 20% 98%); --on-primary:hsl(240 3% 6%);
+  --ok:#4ADE80; --ok-bg:rgba(74,222,128,.12);
+  --warn-bg:rgba(255,255,255,.06);
+  --bad:#F87171; --bad-bg:rgba(248,113,113,.12);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg); color:var(--fg);
+  font-family:var(--body); font-size:14px; line-height:20px;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit;text-decoration:none}
+a:focus-visible,button:focus-visible{outline:2px solid var(--fg);outline-offset:2px;border-radius:6px}
+
+.shell{display:flex;min-height:100vh}
+
+/* ---------------- sidebar ---------------- */
+.side{
+  flex:0 0 208px; width:208px; background:var(--side);
+  border-right:1px solid var(--border); padding:16px 12px;
+  display:flex; flex-direction:column; gap:22px;
+}
+.brand{display:flex;align-items:center;gap:8px;padding:4px 8px 0;font-weight:500;font-size:14px;letter-spacing:-.01em}
+.brand .glyph{width:16px;height:16px;flex:0 0 auto}
+.brand .glyph rect{fill:var(--fg)}
+.navgroup{display:flex;flex-direction:column;gap:2px}
+.navgroup h6{
+  margin:0 0 6px; padding:0 8px;
+  font-size:11px; line-height:16px; font-weight:400; color:var(--fg2);
+}
+.navgroup a{
+  display:flex;align-items:center;gap:9px;
+  height:30px;padding:0 8px;border-radius:8px;
+  font-size:13px;color:var(--fg);
+  transition:background .15s cubic-bezier(.4,0,.2,1);
+}
+.navgroup a:hover{background:var(--muted)}
+.navgroup a.on{background:var(--muted);font-weight:500}
+.navgroup svg{width:15px;height:15px;stroke:var(--fg2);stroke-width:1.5;fill:none;flex:0 0 auto}
+.navgroup a.on svg{stroke:var(--fg)}
+.side .foot{margin-top:auto;padding:0 8px;font-family:var(--mono);font-size:10.5px;line-height:16px;color:var(--fg2)}
+
+/* ---------------- main ---------------- */
+.main{flex:1 1 auto;min-width:0;display:flex;flex-direction:column}
+.topbar{
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  height:52px;padding:0 24px;border-bottom:1px solid var(--border);
+}
+.crumb{font-size:13px;color:var(--fg2)}
+.topbar .spacer{flex:1 1 auto}
+.content{padding:28px 24px 56px;max-width:1240px;width:100%}
+
+.eyebrow{font-size:12px;line-height:16px;color:var(--fg2);margin:0 0 6px}
+h1{font-family:var(--display);font-weight:500;font-size:24px;line-height:30px;letter-spacing:-.006em;margin:0 0 18px}
+h2{font-family:var(--display);font-weight:500;font-size:16px;line-height:22px;letter-spacing:-.004em;margin:0}
+
+.pill{
+  display:inline-flex;align-items:center;gap:7px;height:28px;padding:0 12px;
+  border-radius:999px;border:1px solid var(--control);font-size:12.5px;font-weight:500;white-space:nowrap;
+}
+.pill .dot{width:6px;height:6px;border-radius:50%;background:var(--fg);flex:0 0 auto}
+.pill.warn .dot{background:var(--bad)}
+
+.ctlbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 16px}
+.ctl{
+  display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 10px;
+  border-radius:8px;border:1px solid var(--control);background:transparent;
+  font-family:inherit;font-size:13px;line-height:20px;font-weight:500;color:var(--fg);
+  white-space:nowrap;cursor:default;transition:background .15s cubic-bezier(.4,0,.2,1);
+}
+.ctl .lbl{color:var(--fg2);font-weight:400}
+.ctl svg{width:14px;height:14px;stroke:var(--fg2);stroke-width:1.5;fill:none}
+
+.badge{display:inline-flex;align-items:center;height:22px;padding:0 9px;border-radius:6px;font-size:12px;font-weight:500;line-height:16px;white-space:nowrap}
+.badge.up{background:var(--ok-bg);color:var(--ok)}
+.badge.down{background:var(--bad-bg);color:var(--bad)}
+.badge.flat{background:var(--warn-bg);color:var(--fg2)}
+
+.card{border:1px solid var(--border);border-radius:14px;background:var(--bg);overflow:hidden}
+
+/* metric strip */
+.strip{display:flex;overflow-x:auto;scrollbar-width:thin}
+.cell{
+  flex:1 0 148px;padding:14px 16px 12px;border-right:1px solid var(--border);
+  border-bottom:2px solid transparent;background:none;text-align:left;
+  font-family:inherit;color:inherit;cursor:pointer;
+  transition:background .15s cubic-bezier(.4,0,.2,1);
+}
+.cell:last-child{border-right:none}
+.cell:hover{background:var(--muted)}
+.cell[aria-pressed="true"]{background:var(--muted);border-bottom-color:var(--fg)}
+.cell .lab{font-size:12px;line-height:16px;color:var(--fg2);margin-bottom:5px;white-space:nowrap}
+.cell .val{font-size:19px;line-height:26px;font-weight:500;font-variant-numeric:tabular-nums;white-space:nowrap}
+.cell .val small{font-size:12px;font-weight:400;color:var(--fg2)}
+
+.plot{padding:16px 16px 10px;border-top:1px solid var(--border)}
+.plot svg{display:block;width:100%;height:170px}
+.axis{display:flex;justify-content:space-between;font-size:11px;line-height:16px;color:var(--fg2);padding-top:6px;font-variant-numeric:tabular-nums}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+@media (max-width:900px){.grid2{grid-template-columns:1fr}.grid2 .videos{order:-1}}
+.panel{border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.panel .hd{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--border)}
+.panel .hd .spacer{flex:1 1 auto}
+.panel .hd .meta{font-size:12px;color:var(--fg2)}
+.panel .bd{padding:4px 16px 8px}
+
+.rowitem{display:flex;gap:12px;align-items:center;padding:11px 0;border-bottom:1px solid var(--border)}
+.rowitem:last-child{border-bottom:none}
+.rank{font-family:var(--mono);font-size:12px;color:var(--fg2);width:20px;flex:0 0 auto;font-variant-numeric:tabular-nums}
+.thumb{
+  flex:0 0 auto;width:40px;height:40px;border-radius:8px;border:1px solid var(--border);
+  background:var(--muted);object-fit:cover;display:block;
+}
+.thumb.tall{width:40px;height:56px}
+.ph{display:flex;align-items:center;justify-content:center}
+.ph svg{width:15px;height:15px;stroke:var(--fg2);stroke-width:1.5;fill:none}
+.body{flex:1 1 auto;min-width:0}
+.body .t{font-size:13.5px;line-height:19px;font-weight:500;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+a.t:hover{text-decoration:underline;text-underline-offset:2px}
+.body .s{font-size:12px;line-height:18px;color:var(--fg2);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.num{flex:0 0 auto;text-align:right}
+.num .a{font-size:13.5px;line-height:19px;font-weight:500;font-variant-numeric:tabular-nums;display:block}
+.num .b{font-size:12px;line-height:18px;color:var(--fg2);font-variant-numeric:tabular-nums}
+.share{height:4px;border-radius:2px;background:var(--muted);overflow:hidden;margin-top:6px;max-width:260px}
+.share i{display:block;height:100%;background:var(--c3)}
+
+.health{display:flex;flex-wrap:wrap;gap:10px 28px;margin-top:16px;padding:16px;border:1px solid var(--border);border-radius:14px}
+.health .u{display:flex;flex-direction:column;gap:3px}
+.health .u .k{font-size:12px;color:var(--fg2)}
+.health .u .v{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
+
+.empty{padding:40px 16px;text-align:center;color:var(--fg2)}
+.empty svg{width:34px;height:34px;stroke:var(--fg2);stroke-width:1.25;fill:none;opacity:.55;margin-bottom:10px}
+.empty p{margin:0;font-size:13px;line-height:20px}
+.empty p+p{margin-top:4px;font-size:12px}
+
+@media (max-width:760px){
+  .side{display:none}
+  .content{padding:20px 16px 48px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <nav class="side">
+    <div class="brand">
+      <svg class="glyph" viewBox="0 0 16 16" aria-hidden="true"><rect x="1" y="6" width="3.2" height="9" rx="1"/><rect x="6.4" y="2" width="3.2" height="13" rx="1"/><rect x="11.8" y="9" width="3.2" height="6" rx="1"/></svg>
+      Shop Ledger
+    </div>
+
+    <div class="navgroup">
+      <a class="on" href="#"><svg viewBox="0 0 18 18"><path d="M3 9.5 9 4l6 5.5V15H3z"/></svg>Today</a>
+    </div>
+
+    <div class="navgroup">
+      <h6>Explore</h6>
+      <a href="#movers"><svg viewBox="0 0 18 18"><path d="M3 13.5 7 8l3 3 5-6.5"/></svg>Products</a>
+      <a href="#videos"><svg viewBox="0 0 18 18"><path d="M6.5 4.5 13 9l-6.5 4.5z"/></svg>Videos</a>
+      <a href="#videos"><svg viewBox="0 0 18 18"><circle cx="9" cy="6" r="2.6"/><path d="M3.6 14.6c.6-2.7 2.8-4.1 5.4-4.1s4.8 1.4 5.4 4.1"/></svg>Creators</a>
+    </div>
+
+    <div class="navgroup">
+      <h6>Monitor</h6>
+      <a href="#health"><svg viewBox="0 0 18 18"><path d="M2.5 9h3l2-4.5L10.5 14l2-5h3"/></svg>Data health</a>
+    </div>
+
+    <div class="foot">__FOOT__</div>
+  </nav>
+
+  <main class="main">
+    <div class="topbar">
+      <span class="crumb">Today</span>
+      <span class="spacer"></span>
+      __RUNPILL__
+      <span class="pill">__CREDITS__ credits</span>
+    </div>
+
+    <div class="content">
+      <p class="eyebrow">__DAYLABEL__</p>
+      <h1>__HEADLINE__</h1>
+
+      <div class="ctlbar">
+        <span class="ctl"><span class="lbl">Window</span>__WINDOW__</span>
+        <span class="ctl"><span class="lbl">Granularity</span>Day</span>
+        <span class="ctl"><span class="lbl">Panel</span>__PANEL__ tracked</span>
+      </div>
+
+      <div class="card">
+        <div class="strip" role="group" aria-label="Choose a metric to plot">__STRIP__</div>
+        <div class="plot">
+          <svg id="plot" viewBox="0 0 760 170" preserveAspectRatio="none" role="img" aria-label="Daily series for the selected metric"></svg>
+          <div class="axis"><span>__XFIRST__</span><span>__XLAST__</span></div>
+        </div>
+      </div>
+
+      <div class="grid2">
+        <section class="panel" id="movers">
+          <div class="hd"><h2>Top movers</h2><span class="spacer"></span><span class="meta">by revenue delta</span></div>
+          <div class="bd">__MOVERS__</div>
+        </section>
+
+        <section class="panel videos" id="videos">
+          <div class="hd"><h2>Top 10 videos</h2><span class="spacer"></span><span class="meta">by view delta</span></div>
+          <div class="bd">__VIDEOS__</div>
+        </section>
+      </div>
+
+      <section class="health" id="health">__HEALTH__</section>
+    </div>
+  </main>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  var SERIES = __SERIES__;
+  var svg = document.getElementById("plot");
+  if (!svg) return;
+
+  var NS = "http://www.w3.org/2000/svg";
+  var W = 760, H = 170, L = 44, R = 8, T = 12, B = 26;
+
+  function el(name, attrs) {
+    var node = document.createElementNS(NS, name);
+    for (var key in attrs) node.setAttribute(key, attrs[key]);
+    return node;
+  }
+
+  function short(n) {
+    var abs = Math.abs(n);
+    if (abs >= 1e9) return (n / 1e9).toFixed(1).replace(/\.0$/, "") + "B";
+    if (abs >= 1e6) return (n / 1e6).toFixed(1).replace(/\.0$/, "") + "M";
+    if (abs >= 1e3) return (n / 1e3).toFixed(1).replace(/\.0$/, "") + "K";
+    return String(Math.round(n));
+  }
+
+  function draw(key) {
+    var data = SERIES[key];
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    if (!data || !data.values.length) return;
+
+    var values = data.values;
+    var max = Math.max.apply(null, values);
+    var top = max <= 0 ? 1 : max * 1.12;
+    var innerW = W - L - R, innerH = H - T - B;
+
+    for (var i = 0; i <= 3; i++) {
+      var y = T + (innerH / 3) * i;
+      svg.appendChild(el("line", {
+        x1: L, x2: W - R, y1: y, y2: y,
+        stroke: "currentColor", "stroke-opacity": i === 3 ? 0.14 : 0.08
+      }));
+      var label = el("text", {
+        x: 0, y: y + 4, "font-size": 10, fill: "currentColor",
+        "fill-opacity": 0.5, "font-family": "Inter, sans-serif"
+      });
+      label.textContent = data.money
+        ? "$" + short(top - (top / 3) * i)
+        : short(top - (top / 3) * i);
+      svg.appendChild(label);
+    }
+
+    // A single resolved day is the normal state on day two. Centre it rather
+    // than pinning a lone marker to the left edge.
+    var single = values.length === 1;
+    var step = single ? 0 : innerW / (values.length - 1);
+    var points = values.map(function (v, idx) {
+      var x = single ? L + innerW / 2 : L + step * idx;
+      var y = T + innerH - (v / top) * innerH;
+      return [x, y];
+    });
+
+    svg.appendChild(el("polyline", {
+      points: points.map(function (p) { return p[0] + "," + p[1]; }).join(" "),
+      fill: "none", stroke: "#2563EB", "stroke-width": 1.5,
+      "stroke-linejoin": "round", "stroke-linecap": "round",
+      "vector-effect": "non-scaling-stroke"
+    }));
+
+    var last = points[points.length - 1];
+    svg.appendChild(el("circle", { cx: last[0], cy: last[1], r: 3, fill: "#2563EB" }));
+  }
+
+  var cells = Array.prototype.slice.call(document.querySelectorAll(".cell"));
+  cells.forEach(function (cell) {
+    cell.addEventListener("click", function () {
+      cells.forEach(function (other) { other.setAttribute("aria-pressed", "false"); });
+      cell.setAttribute("aria-pressed", "true");
+      draw(cell.dataset.key);
+    });
+  });
+
+  var active = document.querySelector('.cell[aria-pressed="true"]') || cells[0];
+  if (active) draw(active.dataset.key);
+})();
+</script>
+</body>
+</html>

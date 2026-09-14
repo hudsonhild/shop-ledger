@@ -1,0 +1,24 @@
+# Default discovery sweep. One keyword per line, blank lines and # ignored.
+# Each line costs 1 credit per run and returns up to ~39 products.
+# Trim this to the categories you actually sell in; a narrow sweep with a
+# clean panel beats a wide sweep you cannot afford to track.
+hair oil
+lip gloss
+skincare serum
+teeth whitening
+lash serum
+perfume
+body wash
+supplements
+protein powder
+phone case
+led lights
+kitchen gadget
+cleaning spray
+storage organizer
+pet grooming
+car accessories
+leggings
+shapewear
+jewelry set
+sunglasses

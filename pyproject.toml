@@ -1,0 +1,39 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "shop-ledger"
+version = "0.1.0"
+description = "A personal TikTok Shop product database. Daily snapshots, per-SKU revenue, and video attribution that admits what it cannot see."
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.11"
+keywords = ["tiktok-shop", "ecommerce", "product-research", "analytics", "scraping"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: End Users/Desktop",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Office/Business :: Financial",
+]
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/hudsonhild/shop-ledger"
+Issues = "https://github.com/hudsonhild/shop-ledger/issues"
+
+[project.scripts]
+shop-ledger = "shopledger.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/shopledger"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
