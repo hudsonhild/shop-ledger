@@ -6,7 +6,7 @@
 
   var NS = "http://www.w3.org/2000/svg";
   var STROKE = getComputedStyle(document.documentElement)
-    .getPropertyValue("--p-chart").trim() || "#005BD3";
+    .getPropertyValue("--sl-chart").trim() || "#005BD3";
   var W = 760, H = 170, L = 44, R = 8, T = 12, B = 26;
 
   function el(name, attrs) {

@@ -45,7 +45,7 @@
   --p-color-text-warning:             rgba(94, 66, 0, 1);
   --p-color-text-info:                rgba(0, 58, 90, 1);
   /* the chart ramp: Polaris data-viz leans on its blues */
-  --p-chart:                          rgba(0, 91, 211, 1);
+  --sl-chart:                          rgba(0, 91, 211, 1);
   /* shape */
   --p-border-radius-100: 0.25rem;
   --p-border-radius-150: 0.375rem;
@@ -56,6 +56,7 @@
   --p-shadow-100: 0rem 0.0625rem 0rem 0rem rgba(26, 26, 26, 0.07);
   --p-shadow-200: 0rem 0.1875rem 0.0625rem -0.0625rem rgba(26, 26, 26, 0.07);
   --p-shadow-border-inset: 0rem 0rem 0rem 0.0625rem rgba(0, 0, 0, 0.08) inset;
+  --p-shadow-bevel-100: 0.0625rem 0rem 0rem 0rem rgba(0, 0, 0, 0.13) inset, -0.0625rem 0rem 0rem 0rem rgba(0, 0, 0, 0.13) inset, 0rem -0.0625rem 0rem 0rem rgba(0, 0, 0, 0.17) inset, 0rem 0.0625rem 0rem 0rem rgba(204, 204, 204, 0.5) inset;
   /* the signature bevel on a Shopify button */
   --p-shadow-button: 0rem -0.0625rem 0rem 0rem #b5b5b5 inset,
                      0rem 0rem 0rem 0.0625rem rgba(0, 0, 0, 0.1) inset,
@@ -79,65 +80,95 @@
   --p-space-500: 1.25rem;
   --p-space-600: 1.5rem;
 }
-/* Polaris ships a dark theme as experimental; these are its published overrides. */
+/* Polaris ships a dark theme as experimental. These are its 40 published overrides,
+   verbatim from .p-theme-dark-experimental, and nothing else: Polaris overrides no
+   link colour, no status colour and no button shadow in dark. --sl-chart is a Shop
+   Ledger token, not a Polaris one. */
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --p-color-bg:                       rgba(26, 26, 26, 1);
-  --p-color-bg-surface:               rgba(48, 48, 48, 1);
-  --p-color-bg-surface-secondary:     rgba(38, 38, 38, 1);
-  --p-color-bg-surface-tertiary:      rgba(255, 255, 255, 0.08);
-  --p-color-bg-surface-hover:         rgba(74, 74, 74, 1);
-  --p-color-bg-surface-selected:      rgba(97, 97, 97, 1);
-  --p-color-input-bg-surface:         rgba(48, 48, 48, 1);
-  --p-color-text:                     rgba(227, 227, 227, 1);
-  --p-color-text-secondary:           rgba(181, 181, 181, 1);
-  --p-color-text-link:                rgba(145, 208, 255, 1);
-  --p-color-text-brand-on-bg-fill:    rgba(48, 48, 48, 1);
-  --p-color-border:                   rgba(97, 97, 97, 1);
-  --p-color-border-secondary:         rgba(74, 74, 74, 1);
-  --p-color-bg-fill-brand:            rgba(255, 255, 255, 1);
-  --p-color-bg-fill-brand-hover:      rgba(227, 227, 227, 1);
-  --p-color-bg-fill-transparent:      rgba(255, 255, 255, 0.05);
-  --p-color-bg-fill-transparent-hover:rgba(255, 255, 255, 0.11);
-  --p-color-bg-fill-transparent-secondary: rgba(255, 255, 255, 0.08);
-  --p-color-bg-fill-success-secondary:  rgba(1, 75, 64, 1);
-  --p-color-bg-fill-critical-secondary: rgba(142, 11, 33, 1);
-  --p-color-bg-fill-warning-secondary:  rgba(94, 66, 0, 1);
-  --p-color-bg-fill-info-secondary:     rgba(0, 58, 90, 1);
-  --p-color-text-success:             rgba(175, 254, 191, 1);
-  --p-color-text-critical:            rgba(254, 209, 215, 1);
-  --p-color-text-warning:             rgba(255, 214, 164, 1);
-  --p-color-text-info:                rgba(213, 235, 255, 1);
-  --p-chart:                          rgba(145, 208, 255, 1);
-  --p-shadow-100: 0rem 0.0625rem 0rem 0rem rgba(0, 0, 0, 0.32);
-  --p-shadow-200: 0rem 0.1875rem 0.0625rem -0.0625rem rgba(0, 0, 0, 0.32);
-  --p-shadow-button: 0rem 0rem 0rem 0.0625rem rgba(255, 255, 255, 0.13) inset;
-  --p-shadow-button-primary: 0rem 0rem 0rem 0.0625rem rgba(0, 0, 0, 0.3) inset;
-  --p-color-button-gradient-bg-fill: none;
+  --p-color-bg:                               rgba(26, 26, 26, 1);
+  --p-color-bg-surface:                       rgba(48, 48, 48, 1);
+  --p-color-bg-fill:                          rgba(48, 48, 48, 1);
+  --p-color-icon:                             rgba(227, 227, 227, 1);
+  --p-color-icon-secondary:                   rgba(181, 181, 181, 1);
+  --p-color-icon-disabled:                    rgba(74, 74, 74, 1);
+  --p-color-text:                             rgba(227, 227, 227, 1);
+  --p-color-text-secondary:                   rgba(181, 181, 181, 1);
+  --p-color-text-disabled:                    rgba(74, 74, 74, 1);
+  --p-color-bg-surface-secondary-active:      rgba(255, 255, 255, 0.14);
+  --p-color-bg-surface-secondary-hover:       rgba(255, 255, 255, 0.06);
+  --p-color-bg-fill-transparent:              rgba(255, 255, 255, 0.11);
+  --p-color-bg-fill-brand:                    rgba(255, 255, 255, 1);
+  --p-color-text-brand-on-bg-fill:            rgba(48, 48, 48, 1);
+  --p-color-bg-surface-hover:                 rgba(74, 74, 74, 1);
+  --p-color-bg-fill-hover:                    rgba(255, 255, 255, 0.05);
+  --p-color-bg-fill-transparent-hover:        rgba(255, 255, 255, 0.14);
+  --p-color-bg-fill-brand-hover:              rgba(243, 243, 243, 1);
+  --p-color-bg-surface-selected:              rgba(97, 97, 97, 1);
+  --p-color-bg-fill-selected:                 rgba(97, 97, 97, 1);
+  --p-color-bg-fill-transparent-selected:     rgba(255, 255, 255, 0.22);
+  --p-color-bg-fill-brand-selected:           rgba(212, 212, 212, 1);
+  --p-color-bg-surface-active:                rgba(97, 97, 97, 1);
+  --p-color-bg-fill-active:                   rgba(97, 97, 97, 1);
+  --p-color-bg-fill-transparent-active:       rgba(255, 255, 255, 0.17);
+  --p-color-bg-fill-brand-active:             rgba(247, 247, 247, 1);
+  --p-color-bg-fill-secondary:                rgba(255, 255, 255, 0.08);
+  --p-color-bg-fill-secondary-hover:          rgba(255, 255, 255, 0.11);
+  --p-color-bg-fill-secondary-selected:       rgba(255, 255, 255, 0.17);
+  --p-color-bg-surface-brand-selected:        rgba(74, 74, 74, 1);
+  --p-color-border-secondary:                 rgba(74, 74, 74, 1);
+  --p-color-bg-surface-tertiary:              rgba(255, 255, 255, 0.08);
+  --p-color-icon-brand:                       rgba(74, 74, 74, 1);
+  --p-color-bg-fill-disabled:                 rgba(255, 255, 255, 0.05);
+  --p-color-text-brand-on-bg-fill-disabled:   rgba(138, 138, 138, 1);
+  --p-color-bg-fill-brand-disabled:           rgba(255, 255, 255, 0.22);
+  --p-color-bg-fill-tertiary:                 rgba(48, 48, 48, 1);
+  --p-color-tooltip-tail-down-border:         rgba(60, 60, 60, 1);
+  --p-color-tooltip-tail-up-border:           rgba(71, 71, 71, 1);
+  --p-shadow-bevel-100: 0.0625rem 0rem 0rem 0rem rgba(204, 204, 204, 0.08) inset, -0.0625rem 0rem 0rem 0rem rgba(204, 204, 204, 0.08) inset, 0rem -0.0625rem 0rem 0rem rgba(204, 204, 204, 0.08) inset, 0rem 0.0625rem 0rem 0rem rgba(204, 204, 204, 0.16) inset;
+  --sl-chart:                                 rgba(145, 208, 255, 1);
 }}
 :root[data-theme="dark"]{
-  --p-color-bg:rgba(26,26,26,1); --p-color-bg-surface:rgba(48,48,48,1);
-  --p-color-bg-surface-secondary:rgba(38,38,38,1); --p-color-bg-surface-tertiary:rgba(255,255,255,0.08);
-  --p-color-bg-surface-hover:rgba(74,74,74,1); --p-color-bg-surface-selected:rgba(97,97,97,1);
-  --p-color-input-bg-surface:rgba(48,48,48,1);
-  --p-color-text:rgba(227,227,227,1); --p-color-text-secondary:rgba(181,181,181,1);
-  --p-color-text-link:rgba(145,208,255,1); --p-color-text-brand-on-bg-fill:rgba(48,48,48,1);
-  --p-color-border:rgba(97,97,97,1); --p-color-border-secondary:rgba(74,74,74,1);
-  --p-color-bg-fill-brand:rgba(255,255,255,1); --p-color-bg-fill-brand-hover:rgba(227,227,227,1);
-  --p-color-bg-fill-transparent:rgba(255,255,255,0.05);
-  --p-color-bg-fill-transparent-hover:rgba(255,255,255,0.11);
-  --p-color-bg-fill-transparent-secondary:rgba(255,255,255,0.08);
-  --p-color-bg-fill-success-secondary:rgba(1,75,64,1);
-  --p-color-bg-fill-critical-secondary:rgba(142,11,33,1);
-  --p-color-bg-fill-warning-secondary:rgba(94,66,0,1);
-  --p-color-bg-fill-info-secondary:rgba(0,58,90,1);
-  --p-color-text-success:rgba(175,254,191,1); --p-color-text-critical:rgba(254,209,215,1);
-  --p-color-text-warning:rgba(255,214,164,1); --p-color-text-info:rgba(213,235,255,1);
-  --p-chart:rgba(145,208,255,1);
-  --p-shadow-100:0rem 0.0625rem 0rem 0rem rgba(0,0,0,0.32);
-  --p-shadow-200:0rem 0.1875rem 0.0625rem -0.0625rem rgba(0,0,0,0.32);
-  --p-shadow-button:0rem 0rem 0rem 0.0625rem rgba(255,255,255,0.13) inset;
-  --p-shadow-button-primary:0rem 0rem 0rem 0.0625rem rgba(0,0,0,0.3) inset;
-  --p-color-button-gradient-bg-fill:none;
+  --p-color-bg:                               rgba(26, 26, 26, 1);
+  --p-color-bg-surface:                       rgba(48, 48, 48, 1);
+  --p-color-bg-fill:                          rgba(48, 48, 48, 1);
+  --p-color-icon:                             rgba(227, 227, 227, 1);
+  --p-color-icon-secondary:                   rgba(181, 181, 181, 1);
+  --p-color-icon-disabled:                    rgba(74, 74, 74, 1);
+  --p-color-text:                             rgba(227, 227, 227, 1);
+  --p-color-text-secondary:                   rgba(181, 181, 181, 1);
+  --p-color-text-disabled:                    rgba(74, 74, 74, 1);
+  --p-color-bg-surface-secondary-active:      rgba(255, 255, 255, 0.14);
+  --p-color-bg-surface-secondary-hover:       rgba(255, 255, 255, 0.06);
+  --p-color-bg-fill-transparent:              rgba(255, 255, 255, 0.11);
+  --p-color-bg-fill-brand:                    rgba(255, 255, 255, 1);
+  --p-color-text-brand-on-bg-fill:            rgba(48, 48, 48, 1);
+  --p-color-bg-surface-hover:                 rgba(74, 74, 74, 1);
+  --p-color-bg-fill-hover:                    rgba(255, 255, 255, 0.05);
+  --p-color-bg-fill-transparent-hover:        rgba(255, 255, 255, 0.14);
+  --p-color-bg-fill-brand-hover:              rgba(243, 243, 243, 1);
+  --p-color-bg-surface-selected:              rgba(97, 97, 97, 1);
+  --p-color-bg-fill-selected:                 rgba(97, 97, 97, 1);
+  --p-color-bg-fill-transparent-selected:     rgba(255, 255, 255, 0.22);
+  --p-color-bg-fill-brand-selected:           rgba(212, 212, 212, 1);
+  --p-color-bg-surface-active:                rgba(97, 97, 97, 1);
+  --p-color-bg-fill-active:                   rgba(97, 97, 97, 1);
+  --p-color-bg-fill-transparent-active:       rgba(255, 255, 255, 0.17);
+  --p-color-bg-fill-brand-active:             rgba(247, 247, 247, 1);
+  --p-color-bg-fill-secondary:                rgba(255, 255, 255, 0.08);
+  --p-color-bg-fill-secondary-hover:          rgba(255, 255, 255, 0.11);
+  --p-color-bg-fill-secondary-selected:       rgba(255, 255, 255, 0.17);
+  --p-color-bg-surface-brand-selected:        rgba(74, 74, 74, 1);
+  --p-color-border-secondary:                 rgba(74, 74, 74, 1);
+  --p-color-bg-surface-tertiary:              rgba(255, 255, 255, 0.08);
+  --p-color-icon-brand:                       rgba(74, 74, 74, 1);
+  --p-color-bg-fill-disabled:                 rgba(255, 255, 255, 0.05);
+  --p-color-text-brand-on-bg-fill-disabled:   rgba(138, 138, 138, 1);
+  --p-color-bg-fill-brand-disabled:           rgba(255, 255, 255, 0.22);
+  --p-color-bg-fill-tertiary:                 rgba(48, 48, 48, 1);
+  --p-color-tooltip-tail-down-border:         rgba(60, 60, 60, 1);
+  --p-color-tooltip-tail-up-border:           rgba(71, 71, 71, 1);
+  --p-shadow-bevel-100: 0.0625rem 0rem 0rem 0rem rgba(204, 204, 204, 0.08) inset, -0.0625rem 0rem 0rem 0rem rgba(204, 204, 204, 0.08) inset, 0rem -0.0625rem 0rem 0rem rgba(204, 204, 204, 0.08) inset, 0rem 0.0625rem 0rem 0rem rgba(204, 204, 204, 0.16) inset;
+  --sl-chart:                                 rgba(145, 208, 255, 1);
 }
 
 *{box-sizing:border-box}
@@ -231,7 +262,7 @@ p.note{
 .pill{
   display:inline-flex;align-items:center;gap:var(--p-space-200);
   padding:0.1875rem var(--p-space-300);border-radius:var(--p-border-radius-200);
-  background:var(--p-color-bg-surface);box-shadow:var(--p-shadow-100),var(--p-shadow-border-inset);
+  background:var(--p-color-bg-surface);box-shadow:var(--p-shadow-100),var(--p-shadow-bevel-100);
   font-size:0.75rem;line-height:1rem;font-weight:var(--p-font-weight-medium);white-space:nowrap;
 }
 .pill .dot{width:0.5rem;height:0.5rem;border-radius:50%;background:var(--p-color-text-success);flex:0 0 auto}
@@ -268,7 +299,7 @@ input.ctl::placeholder{color:var(--p-color-text-secondary)}
 .card,.panel{
   background:var(--p-color-bg-surface);
   border-radius:var(--p-border-radius-300);
-  box-shadow:var(--p-shadow-100),var(--p-shadow-border-inset);
+  box-shadow:var(--p-shadow-100),var(--p-shadow-bevel-100);
   overflow:hidden;
 }
 .panel{margin-bottom:var(--p-space-400)}
@@ -355,14 +386,14 @@ a.t:hover{text-decoration:underline}
   background:var(--p-color-bg-fill-transparent-secondary);
   overflow:hidden;margin-top:var(--p-space-100);max-width:16rem;
 }
-.share i{display:block;height:100%;background:var(--p-chart)}
+.share i{display:block;height:100%;background:var(--sl-chart)}
 
 /* ---- Polaris IndexTable */
 .tablewrap{overflow-x:auto}
 table{border-collapse:collapse;width:100%;font-size:0.8125rem}
 thead th{
   background:var(--p-color-bg-surface-secondary);
-  padding:var(--p-space-200) var(--p-space-300);
+  padding:var(--p-space-200) var(--p-space-150);
   text-align:left;white-space:nowrap;border:0;
   font-size:0.75rem;line-height:1rem;
   font-weight:var(--p-font-weight-medium);color:var(--p-color-text-secondary);
@@ -391,7 +422,7 @@ td.prod .s{font-size:0.75rem;color:var(--p-color-text-secondary);overflow:hidden
   display:flex;flex-wrap:wrap;gap:var(--p-space-300) var(--p-space-600);
   margin-top:var(--p-space-400);padding:var(--p-space-400);
   background:var(--p-color-bg-surface);border-radius:var(--p-border-radius-300);
-  box-shadow:var(--p-shadow-100),var(--p-shadow-border-inset);
+  box-shadow:var(--p-shadow-100),var(--p-shadow-bevel-100);
 }
 .health .u{display:flex;flex-direction:column;gap:0.125rem}
 .health .u .k{font-size:0.75rem;color:var(--p-color-text-secondary)}
