@@ -24,8 +24,11 @@ jobs:
         run: |
           shop-ledger init
           shop-ledger status
-          shop-ledger render --offline --out /tmp/index.html
-          test -s /tmp/index.html
+          shop-ledger render --offline --out /tmp/site
+          for page in index products videos creators health; do
+            test -s "/tmp/site/$page.html" || { echo "missing $page.html"; exit 1; }
+          done
+          ! grep -rq "__[A-Z_]*__" /tmp/site/*.html || { echo "unreplaced token"; exit 1; }
 
   lint:
     runs-on: ubuntu-latest

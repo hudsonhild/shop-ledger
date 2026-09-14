@@ -2,7 +2,7 @@
 
 A personal TikTok Shop product database. It snapshots the top movers every day, computes revenue per SKU instead of guessing from a price range, links every driving video, and tells you plainly when it cannot explain a day's sales.
 
-Zero dependencies. One SQLite file. One HTML dashboard.
+Zero dependencies. One SQLite file. A six-screen dashboard that runs from disk or a local server.
 
 ```
 git clone https://github.com/hudsonhild/shop-ledger && cd shop-ledger
@@ -29,7 +29,7 @@ That last one is the whole point. If a product sold 3,000 units and its videos b
 - Revenue computed as the sum of `units per variant × price of that variant`. On a product listed at `$18.70 - 55.50`, a midpoint estimate is off by a lot; this is not.
 - The top 10 videos each day with real links, creator handles, view deltas and attribution share.
 - A confidence figure on every row, and an unattributed residual that is allowed to be large.
-- A dashboard that loads from a single HTML file, works offline, and follows your system light or dark theme.
+- Six screens that work opened from disk or served locally, with no build step, and follow your system light or dark theme.
 
 ## Quick start
 
@@ -40,7 +40,7 @@ You need Python 3.11 or newer and a free [ScrapeCreators](https://scrapecreators
 3. `shop-ledger run` — sweeps, pulls, resolves and renders.
 4. Run it again tomorrow. **The first run cannot produce a single number**, because a delta needs two readings. This is normal and the dashboard says so.
 
-Then open `data/out/index.html`, or use `shop-ledger render --open`.
+Then open `data/out/index.html`, or run `shop-ledger serve --open`.
 
 ## Commands
 
@@ -48,9 +48,19 @@ Then open `data/out/index.html`, or use `shop-ledger render --open`.
 - `shop-ledger sweep` — search the keyword list, record what is out there, promote the movers into the tracked panel.
 - `shop-ledger pull` — full detail pull for the tracked panel. This is where SKU stock and the video panel arrive.
 - `shop-ledger resolve` — compute units, revenue and attribution. Pure local work, costs nothing, safe to re-run.
-- `shop-ledger render --open` — write and open the dashboard.
-- `shop-ledger run` — all of the above in order.
+- `shop-ledger render --open` — write the whole site and open it.
+- `shop-ledger serve --open` — serve it at `http://127.0.0.1:8787`.
+- `shop-ledger run` — sweep, pull, resolve and render in order.
 - `shop-ledger status` — what is currently in the database.
+
+## Screens
+
+- **Today** — the metric strip and chart, top movers, top 10 videos, and a data-health strip. Click a metric to re-plot the chart.
+- **Products** — the whole tracked panel as a sortable, filterable table. Every row opens a detail page.
+- **Product detail** — that product's own chart, its variants with exact per-variant stock and price, its facts including the sold-versus-stock disagreement, and its videos ranked by view delta.
+- **Videos** — every video on the panel, commission-flagged or organic, with view deltas, attribution shares and links out to TikTok.
+- **Creators** — affiliates aggregated across products, ranked by attributed revenue. A creator appearing on several products is the stronger signal.
+- **Data health** — flagged rows, the sold-versus-stock gaps, and the run log.
 
 ## What it costs
 

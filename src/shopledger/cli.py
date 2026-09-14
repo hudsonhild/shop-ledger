@@ -3,7 +3,11 @@
 from __future__ import annotations
 
 import argparse
+import functools
+import http.server
+import socketserver
 import sys
+import threading
 import uuid
 import webbrowser
 from pathlib import Path
@@ -121,12 +125,49 @@ def cmd_render(args: argparse.Namespace) -> int:
         except ApiError:
             credits = None
 
-    out = Path(args.out) if args.out else cfg.out_dir / "index.html"
+    out = Path(args.out) if args.out else cfg.out_dir
     with db.session(cfg.db_path) as conn:
         path = render.render(conn, out, credits)
-    _say(f"dashboard written to {path}")
+    pages = len(list(path.parent.glob("*.html"))) + len(
+        list((path.parent / "products").glob("*.html"))
+    )
+    _say(f"{pages} pages written to {path.parent}")
     if args.open:
         webbrowser.open(path.resolve().as_uri())
+    return 0
+
+
+def cmd_serve(args: argparse.Namespace) -> int:
+    """Serve the rendered site locally.
+
+    Opening the files directly works too, but a server gives clean URLs and
+    lets a phone on the same network reach it.
+    """
+    cfg = config.load(require_key=False)
+    root = Path(args.dir) if args.dir else cfg.out_dir
+    if not (root / "index.html").exists():
+        _say(f"nothing rendered at {root}. Run `shop-ledger render` first.")
+        return 2
+
+    class Quiet(http.server.SimpleHTTPRequestHandler):
+        def log_message(self, *args) -> None:  # noqa: D102 - silence per-request noise
+            pass
+
+    handler = functools.partial(Quiet, directory=str(root))
+
+    class Reusable(socketserver.TCPServer):
+        allow_reuse_address = True
+
+    with Reusable(("127.0.0.1", args.port), handler) as httpd:
+        url = f"http://127.0.0.1:{args.port}/"
+        _say(f"serving {root} at {url}")
+        _say("ctrl-c to stop")
+        if args.open:
+            threading.Timer(0.4, lambda: webbrowser.open(url)).start()
+        try:
+            httpd.serve_forever()
+        except KeyboardInterrupt:
+            _say("stopped")
     return 0
 
 
@@ -182,7 +223,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
 
     p_render = sub.add_parser("render", help="write the dashboard")
-    p_render.add_argument("--out", help="output path, defaults to <data-dir>/out/index.html")
+    p_render.add_argument("--out", help="output directory, defaults to <data-dir>/out")
     p_render.add_argument("--open", action="store_true", help="open it in a browser")
     p_render.add_argument("--offline", action="store_true", help="skip the credit check")
     p_render.set_defaults(func=cmd_render)
@@ -193,6 +234,12 @@ def build_parser() -> argparse.ArgumentParser:
     p_run.add_argument("--open", action="store_true")
     p_run.add_argument("--offline", action="store_true")
     p_run.set_defaults(func=cmd_run)
+
+    p_serve = sub.add_parser("serve", help="serve the rendered site locally")
+    p_serve.add_argument("--port", type=int, default=8787)
+    p_serve.add_argument("--dir", help="directory to serve, defaults to <data-dir>/out")
+    p_serve.add_argument("--open", action="store_true", help="open it in a browser")
+    p_serve.set_defaults(func=cmd_serve)
 
     sub.add_parser("status", help="what is in the database").set_defaults(func=cmd_status)
     return parser
