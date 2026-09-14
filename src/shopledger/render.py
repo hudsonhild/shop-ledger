@@ -407,7 +407,7 @@ def page_products(site: Site) -> str:
         search = f"{r['title']} {r['seller_name'] or ''} {r['category_name'] or ''}"
         method = badge(r["method"], tooltip="How the day's units were resolved") if r["method"] else missing()
         if r["partial"]:
-            method += " " + badge(f"{r['interval_hours']:.1f}h", "attention", tooltip="Partial interval, not a full day")
+            method += " " + badge("Partial", "attention", tooltip=f"Measured over {r['interval_hours']:.1f} hours, not a full day")
         if r["restock"]:
             method += " " + badge("restock", "info")
         rating = f"{r['rating']:.1f}" if r["rating"] else missing()
