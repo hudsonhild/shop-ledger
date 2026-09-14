@@ -94,13 +94,29 @@ Your key is read at runtime and is never written to the database or the dashboar
 
 Pick a fixed hour and keep it. A job that drifts from 02:00 to 04:00 turns a 24-hour reading into a 26-hour one and corrupts every rate derived from it.
 
+`scripts/daily.sh` does the whole run and wraps it in `caffeinate`, because a macOS dark-wake can otherwise kill a long network job halfway and leave a partial day.
+
 **macOS and Linux**, via `crontab -e`:
 
 ```
-0 2 * * * cd /path/to/shop-ledger && /usr/bin/env shop-ledger run >> data/run.log 2>&1
+0 2 * * * /path/to/shop-ledger/scripts/daily.sh >> /path/to/shop-ledger/data/logs/daily.log 2>&1
 ```
 
-**Windows**, via Task Scheduler: create a daily task running `shop-ledger run` with the repo as the working directory.
+**macOS with launchd** is steadier than cron for a laptop that sleeps. There is a working plist in `docs/launchd.plist`; keep its log paths out of any cloud-synced folder, since launchd fails with exit 78 when it cannot write them.
+
+**Windows**, via Task Scheduler: a daily task running `shop-ledger run` with the repo as the working directory.
+
+## Reach it from anywhere
+
+The render output is a plain static site, so any static host works and none of them need a build step.
+
+Set `SHOPLEDGER_DEPLOY=1` and `scripts/daily.sh` will publish through the Vercel CLI after each run, if you have it installed and the project linked:
+
+```
+cd data/out && vercel deploy --prod
+```
+
+GitHub Pages, Netlify, Cloudflare Pages or `rsync` to any web root work the same way: point them at `data/out`. Anything you publish is public unless you add protection at the host, and the pages carry product research rather than anything private, but that is worth a thought before you share the link.
 
 ## How it decides the numbers
 

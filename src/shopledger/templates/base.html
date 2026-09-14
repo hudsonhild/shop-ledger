@@ -170,9 +170,32 @@ td.prod .s{font-size:12px;color:var(--fg2);overflow:hidden;text-overflow:ellipsi
 .kv dd{margin:0;font-variant-numeric:tabular-nums}
 
 @media (max-width:760px){
-  .side{display:none}
+  .shell{flex-direction:column}
+  .side{
+    flex:0 0 auto;width:100%;border-right:none;border-bottom:1px solid var(--border);
+    flex-direction:row;align-items:center;gap:0;padding:8px 12px;
+    overflow-x:auto;scrollbar-width:none;
+  }
+  .side::-webkit-scrollbar{display:none}
+  .side .brand{padding:0 12px 0 4px;white-space:nowrap;flex:0 0 auto}
+  .side .foot{display:none}
+  .navgroup{flex-direction:row;gap:4px;flex:0 0 auto}
+  .navgroup h6{display:none}
+  .navgroup a{white-space:nowrap;padding:0 10px}
+  .topbar{height:auto;padding:10px 16px;gap:8px}
+  .topbar .crumb{display:none}
+  .topbar .spacer{display:none}
   .content{padding:20px 16px 48px}
   td.prod{min-width:200px}
+  h1{font-size:21px;line-height:27px}
+  .cell{flex:1 0 128px}
+  input.ctl,select.ctl{min-width:0;flex:1 1 160px}
+  .ctlbar{gap:6px}
+  .health{gap:10px 20px}
+}
+@media (max-width:420px){
+  .side .brand .name{display:none}
+  .navgroup a{font-size:12.5px;padding:0 8px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -180,7 +203,7 @@ td.prod .s{font-size:12px;color:var(--fg2);overflow:hidden;text-overflow:ellipsi
 <body>
 <div class="shell">
   <nav class="side">
-    <div class="brand">__WORDMARK__ Shop Ledger</div>
+    <div class="brand">__WORDMARK__<span class="name">Shop Ledger</span></div>
     __NAV__
     <div class="foot">__FOOT__</div>
   </nav>
