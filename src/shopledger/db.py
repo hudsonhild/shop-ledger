@@ -196,9 +196,7 @@ def skus_at(conn: sqlite3.Connection, product_id: str, captured_at: str) -> list
 
 
 def videos_for(conn: sqlite3.Connection, product_id: str) -> list[sqlite3.Row]:
-    return conn.execute(
-        "SELECT * FROM video WHERE product_id = ?", (product_id,)
-    ).fetchall()
+    return conn.execute("SELECT * FROM video WHERE product_id = ?", (product_id,)).fetchall()
 
 
 def video_pair(conn: sqlite3.Connection, item_id: str) -> list[sqlite3.Row]:

@@ -48,9 +48,7 @@ def cmd_sweep(args: argparse.Namespace) -> int:
         db.start_run(conn, run_id, "sweep", client.credits)
         result = sweep.sweep(conn, client, keywords)
         promoted = sweep.promote(conn, cfg.panel_size)
-        db.finish_run(
-            conn, run_id, client.credits, client.calls, len(result["failures"]), "sweep"
-        )
+        db.finish_run(conn, run_id, client.credits, client.calls, len(result["failures"]), "sweep")
 
     _say(
         f"swept {result['keywords']} keywords, saw {result['products']} products, "
@@ -84,9 +82,7 @@ def cmd_pull(args: argparse.Namespace) -> int:
         _say(f"aborted: {exc}")
         return 2
 
-    _say(
-        f"pulled {result['pulled']}/{result['of']} products, {result['videos']} videos"
-    )
+    _say(f"pulled {result['pulled']}/{result['of']} products, {result['videos']} videos")
     if panel["orphans"]:
         _say(
             f"  panel persistence: re-sampled {panel['kept']}/{panel['orphans']} "
@@ -154,9 +150,7 @@ def cmd_status(args: argparse.Namespace) -> int:
         }
         for label, query in counts.items():
             _say(f"{label}: {conn.execute(query).fetchone()[0]:,}")
-        last = conn.execute(
-            "SELECT * FROM run_log ORDER BY started_at DESC LIMIT 1"
-        ).fetchone()
+        last = conn.execute("SELECT * FROM run_log ORDER BY started_at DESC LIMIT 1").fetchone()
         if last:
             _say(
                 f"last run {last['stage']} at {last['started_at']}, "

@@ -111,9 +111,7 @@ def pull(conn: sqlite3.Connection, client: Client, min_credits: int) -> dict:
     }
 
 
-def persist_panel(
-    conn, client: Client, window_days: int, min_credits: int, budget: int
-) -> dict:
+def persist_panel(conn, client: Client, window_days: int, min_credits: int, budget: int) -> dict:
     """Keep sampling affiliate videos that fell out of a product's top 18.
 
     `related_videos` is ranked and truncated, so a video slipping to 19th

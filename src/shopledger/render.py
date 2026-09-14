@@ -100,8 +100,7 @@ def _strip(series: dict) -> str:
 
 def _empty(title: str, hint: str) -> str:
     return (
-        f'<div class="empty">{icon("chart-empty", 32)}'
-        f"<p>{esc(title)}</p><p>{esc(hint)}</p></div>"
+        f'<div class="empty">{icon("chart-empty", 32)}<p>{esc(title)}</p><p>{esc(hint)}</p></div>'
     )
 
 
@@ -183,7 +182,7 @@ def _videos(conn: sqlite3.Connection, day: str | None) -> str:
             else f'<span class="thumb tall ph">{icon("play", 15)}</span>'
         )
         title = row["title"] or row["product_title"] or "Untitled video"
-        handle = f'@{row["author_name"]}' if row["author_name"] else "unknown creator"
+        handle = f"@{row['author_name']}" if row["author_name"] else "unknown creator"
         width = max(2.0, min(100.0, row["share"] * 100))
         items.append(
             f'<div class="rowitem"><span class="rank">{index:02d}</span>{thumb}'
@@ -232,10 +231,14 @@ def _health(conn: sqlite3.Connection, day: str | None, credits: int | None) -> s
 
 def render(conn: sqlite3.Connection, out_path: Path, credits: int | None = None) -> Path:
     days = _days(conn)
-    series = _series(conn, days) if days else {
-        k: {"values": [], "money": k == "revenue"}
-        for k in ("units", "revenue", "tracked", "attributed", "entrants")
-    }
+    series = (
+        _series(conn, days)
+        if days
+        else {
+            k: {"values": [], "money": k == "revenue"}
+            for k in ("units", "revenue", "tracked", "attributed", "entrants")
+        }
+    )
     latest = days[-1] if days else None
 
     last_run = conn.execute(
@@ -246,19 +249,25 @@ def render(conn: sqlite3.Connection, out_path: Path, credits: int | None = None)
     else:
         clean = (last_run["errors"] or 0) == 0
         stamp = last_run["finished_at"][11:16] + " UTC"
-        state = "clean" if clean else f'{last_run["errors"]} errors'
+        state = "clean" if clean else f"{last_run['errors']} errors"
         klass = "pill" if clean else "pill warn"
-        run_pill = f'<span class="{klass}"><i class="dot"></i>Last run {esc(stamp)} · {esc(state)}</span>'
+        run_pill = (
+            f'<span class="{klass}"><i class="dot"></i>Last run {esc(stamp)} · {esc(state)}</span>'
+        )
 
     if latest:
-        headline = f"{short(series['units']['values'][-1])} units · {money(series['revenue']['values'][-1])}"
+        units_today = short(series["units"]["values"][-1])
+        revenue_today = money(series["revenue"]["values"][-1])
+        headline = f"{units_today} units · {revenue_today}"
         day_label = datetime.strptime(latest, "%Y-%m-%d").strftime("%A %d %B %Y")
     else:
         headline = "Waiting on the first delta"
         day_label = "No resolved days yet"
 
     template = (
-        resources.files("shopledger.templates").joinpath("dashboard.html").read_text(encoding="utf-8")
+        resources.files("shopledger.templates")
+        .joinpath("dashboard.html")
+        .read_text(encoding="utf-8")
     )
     panel = conn.execute("SELECT COUNT(*) AS n FROM product WHERE tier='tracked'").fetchone()["n"]
 

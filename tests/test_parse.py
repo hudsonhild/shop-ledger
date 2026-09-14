@@ -15,7 +15,11 @@ DETAIL = {
         "category_id": 601450,
         "category_name": "Beauty & Personal Care",
         "images": [{"url_list": ["https://cdn.example/img.webp"]}],
-        "price": {"min_sku_price": "18.70", "max_sku_price": "55.50", "real_price": "$18.70 - 55.50"},
+        "price": {
+            "min_sku_price": "18.70",
+            "max_sku_price": "55.50",
+            "real_price": "$18.70 - 55.50",
+        },
     },
     "seller": {"name": "Wonderskin", "rating": 4.8},
     "seller_id": "7494697002145646021",
@@ -137,7 +141,6 @@ class SearchProduct(unittest.TestCase):
     def test_falls_back_to_a_constructed_pdp_url(self):
         row = search_product({"product_id": "99"})
         self.assertEqual(row["pdp_url"], "https://www.tiktok.com/shop/pdp/99")
-
 
 
 class VideoStats(unittest.TestCase):

@@ -8,7 +8,9 @@ from shopledger.resolve import attribute, compute_units
 
 
 def skus(*rows):
-    return {sku_id: {"sku_id": sku_id, "stock": stock, "price": price} for sku_id, stock, price in rows}
+    return {
+        sku_id: {"sku_id": sku_id, "stock": stock, "price": price} for sku_id, stock, price in rows
+    }
 
 
 class ComputeUnits(unittest.TestCase):
@@ -87,7 +89,12 @@ class Attribute(unittest.TestCase):
     def test_engagement_weighting_favours_the_higher_like_rate(self):
         videos = [
             # Same view delta, very different like rates.
-            {"item_id": "farm", "view_delta": 100_000, "play_count": 10_000_000, "like_count": 1_000},
+            {
+                "item_id": "farm",
+                "view_delta": 100_000,
+                "play_count": 10_000_000,
+                "like_count": 1_000,
+            },
             {"item_id": "real", "view_delta": 100_000, "play_count": 200_000, "like_count": 12_000},
         ]
         result = attribute(100, 1000.0, videos, [1000.0] * 3, 1000, 10)
@@ -115,9 +122,7 @@ class Attribute(unittest.TestCase):
 
     def test_thin_coverage_leaves_a_residual(self):
         """Panel explains a fraction of the day, so most of it stays unattributed."""
-        videos = [
-            {"item_id": "v1", "view_delta": 20_000, "play_count": 100_000, "like_count": 0}
-        ]
+        videos = [{"item_id": "v1", "view_delta": 20_000, "play_count": 100_000, "like_count": 0}]
         result = attribute(100, 1000.0, videos, [2000.0] * 3, 2000, 0)
 
         self.assertAlmostEqual(result.confidence, 0.1, places=3)

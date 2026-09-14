@@ -6,6 +6,7 @@ side effect of normal work and the caller never has to spend a call to check it.
 
 from __future__ import annotations
 
+import contextlib
 import json
 import time
 import urllib.error
@@ -44,10 +45,12 @@ class Client:
 
     def _get(self, path: str, params: dict[str, str]) -> dict[str, Any]:
         url = f"{BASE}{path}?{urllib.parse.urlencode(params)}"
-        request = urllib.request.Request(
-            url,
-            headers={"x-api-key": self._key, "User-Agent": USER_AGENT, "Accept": "application/json"},
-        )
+        headers = {
+            "x-api-key": self._key,
+            "User-Agent": USER_AGENT,
+            "Accept": "application/json",
+        }
+        request = urllib.request.Request(url, headers=headers)
 
         last: Exception | None = None
         for attempt in range(self._retries):
@@ -118,8 +121,6 @@ class Client:
 
         The API returns the balance on the error envelope and charges nothing.
         """
-        try:
+        with contextlib.suppress(NotFound, ApiError):
             self._get("/v1/tiktok/product", {"url": "https://www.tiktok.com/shop/pdp/0"})
-        except (NotFound, ApiError):
-            pass
         return self.credits

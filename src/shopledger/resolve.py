@@ -51,9 +51,7 @@ def compute_units(
             per_sku[sku_id] = delta
 
     stock_delta = sum(per_sku.values()) if per_sku else 0
-    sold_delta = (
-        curr_sold - prev_sold if curr_sold is not None and prev_sold is not None else None
-    )
+    sold_delta = curr_sold - prev_sold if curr_sold is not None and prev_sold is not None else None
 
     result = Units(
         restock=restock,
@@ -95,9 +93,7 @@ def _revenue(result: Units, curr_skus: dict[str, dict]) -> float:
     if result.units <= 0:
         return 0.0
 
-    priced = {
-        sku_id: sku for sku_id, sku in curr_skus.items() if sku.get("price") is not None
-    }
+    priced = {sku_id: sku for sku_id, sku in curr_skus.items() if sku.get("price") is not None}
     if not priced:
         return 0.0
 
@@ -211,8 +207,12 @@ def resolve(conn: sqlite3.Connection, cfg: Config) -> dict:
         curr, prev = snaps[0], snaps[1]
         day = curr["day"]
 
-        curr_skus = {r["sku_id"]: dict(r) for r in db.skus_at(conn, product_id, curr["captured_at"])}
-        prev_skus = {r["sku_id"]: dict(r) for r in db.skus_at(conn, product_id, prev["captured_at"])}
+        curr_skus = {
+            r["sku_id"]: dict(r) for r in db.skus_at(conn, product_id, curr["captured_at"])
+        }
+        prev_skus = {
+            r["sku_id"]: dict(r) for r in db.skus_at(conn, product_id, prev["captured_at"])
+        }
 
         units = compute_units(prev_skus, curr_skus, prev["sold_count"], curr["sold_count"])
 
@@ -272,7 +272,8 @@ def resolve(conn: sqlite3.Connection, cfg: Config) -> dict:
         for row in attr.rows:
             conn.execute(
                 """
-                INSERT INTO attribution (product_id, item_id, day, view_delta, share, units, revenue)
+                INSERT INTO attribution
+                    (product_id, item_id, day, view_delta, share, units, revenue)
                 VALUES (?,?,?,?,?,?,?)
                 ON CONFLICT(product_id, item_id, day) DO UPDATE SET
                     view_delta=excluded.view_delta, share=excluded.share,
