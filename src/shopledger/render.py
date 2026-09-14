@@ -284,10 +284,10 @@ def page_index(site: Site) -> str:
       <h1>{headline}</h1>
       {partial_note}
       <div class="ctlbar">
-        <span class="ctl">{icon("calendar", 14)}<span class="lbl">Window</span>{esc(window)}</span>
+        <span class="ctl">{icon("calendar", 16)}<span class="lbl">Window</span>{esc(window)}</span>
         <span class="ctl"><span class="lbl">Granularity</span>Day</span>
-        <span class="ctl">{icon("layers", 14)}<span class="lbl">Panel</span>{panel} tracked</span>
-        <a class="ctl" href="products.html">All products{icon("external", 14)}</a>
+        <span class="ctl">{icon("layers", 16)}<span class="lbl">Panel</span>{panel} tracked</span>
+        <a class="ctl" href="products.html">All products{icon("external", 16)}</a>
       </div>
       {_chart_card(series, site.days, METRICS)}
       <div class="grid2">
@@ -381,7 +381,7 @@ def page_products(site: Site) -> str:
       <div class="ctlbar">
         <input class="ctl" id="search" type="search"
                placeholder="Filter by title, seller or category">
-        <span class="ctl">{icon("layers", 14)}<span class="lbl">Panel</span>{len(rows)}</span>
+        <span class="ctl">{icon("layers", 16)}<span class="lbl">Panel</span>{len(rows)}</span>
       </div>
       <div class="panel"><div class="bd flush">{table}</div></div>
     """
@@ -489,7 +489,7 @@ def page_product(site: Site, product) -> str:
       <h1>{esc(product["title"])}</h1>
       <div class="ctlbar">
         <a class="ctl" href="{esc(product["pdp_url"])}" target="_blank" rel="noopener">
-          Open on TikTok Shop{icon("external", 14)}</a>
+          Open on TikTok Shop{icon("external", 16)}</a>
         <span class="ctl"><span class="lbl">ID</span>{esc(pid)}</span>
         <span class="ctl"><span class="lbl">Today</span>{esc(headline)}</span>
       </div>
@@ -584,7 +584,7 @@ def page_videos(site: Site) -> str:
       <div class="ctlbar">
         <input class="ctl" id="search" type="search"
                placeholder="Filter by title, creator or product">
-        <span class="ctl">{icon("play", 14)}<span class="lbl">Videos</span>{len(rows)}</span>
+        <span class="ctl">{icon("play", 16)}<span class="lbl">Videos</span>{len(rows)}</span>
       </div>
       <div class="panel"><div class="bd flush">{table}</div></div>
     """
@@ -658,7 +658,7 @@ def page_creators(site: Site) -> str:
         one viral video is luck and three is a method.</p>
       <div class="ctlbar">
         <input class="ctl" id="search" type="search" placeholder="Filter by handle">
-        <span class="ctl">{icon("users", 14)}<span class="lbl">Creators</span>{len(rows)}</span>
+        <span class="ctl">{icon("users", 16)}<span class="lbl">Creators</span>{len(rows)}</span>
       </div>
       <div class="panel"><div class="bd flush">{table}</div></div>
     """

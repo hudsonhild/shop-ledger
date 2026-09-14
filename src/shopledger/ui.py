@@ -56,14 +56,14 @@ def nav(active: str, prefix: str = "") -> str:
             rows.append(f"<h6>{esc(heading)}</h6>")
         for label, href, glyph in items:
             on = ' class="on"' if href == active else ""
-            rows.append(f'<a href="{prefix}{href}"{on}>{icon(glyph)}{esc(label)}</a>')
+            rows.append(f'<a href="{prefix}{href}"{on}>{icon(glyph, 20)}{esc(label)}</a>')
         out.append(f'<div class="navgroup">{"".join(rows)}</div>')
     return "".join(out)
 
 
 def empty(title: str, hint: str) -> str:
     return (
-        f'<div class="empty">{icon("chart-empty", 32)}<p>{esc(title)}</p><p>{esc(hint)}</p></div>'
+        f'<div class="empty">{icon("chart-empty", 36)}<p>{esc(title)}</p><p>{esc(hint)}</p></div>'
     )
 
 
@@ -83,7 +83,7 @@ def thumb(url: str | None, tall: bool = False, glyph: str = "image") -> str:
     cls = "thumb tall" if tall else "thumb"
     if url:
         return f'<img class="{cls}" src="{esc(url)}" alt="" loading="lazy">'
-    return f'<span class="{cls} ph">{icon(glyph, 15)}</span>'
+    return f'<span class="{cls} ph">{icon(glyph, 16)}</span>'
 
 
 def product_row(index: int, row, prefix: str = "") -> str:

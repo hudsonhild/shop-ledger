@@ -6,196 +6,434 @@
 <title>__TITLE__</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500&family=Inter:wght@400;500&family=Geist+Mono:wght@400&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;650;700&display=swap">
 <style>
+/* Shopify Polaris. Token values are verbatim from @shopify/polaris-tokens 9.4.2
+   (MIT, Copyright 2017-present Shopify Inc.), light theme, with the documented
+   dark-experimental overrides. Names match Polaris so a value can be traced. */
 :root{
-  --bg:#FFFFFF; --side:#FAFAFA; --fg:#0F0F10; --fg2:rgba(0,0,0,.53);
-  --muted:rgba(0,0,0,.04); --border:rgba(0,0,0,.075); --control:rgba(0,0,0,.12);
-  --primary:hsl(0 0% 18%); --on-primary:#FAFAFA;
-  --c1:#93C5FD; --c2:#3B82F6; --c3:#2563EB; --c4:#1D4ED8;
-  --ok:#16803D; --ok-bg:rgba(22,128,61,.10);
-  --warn-bg:rgba(0,0,0,.05);
-  --bad:#DC2626; --bad-bg:rgba(220,38,38,.10);
-  --display:"Archivo","Helvetica Neue",Arial,sans-serif;
-  --body:"Inter","Helvetica Neue",Arial,sans-serif;
-  --mono:"Geist Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  /* surface */
+  --p-color-bg:                       rgba(241, 241, 241, 1);
+  --p-color-bg-surface:               rgba(255, 255, 255, 1);
+  --p-color-bg-surface-secondary:     rgba(247, 247, 247, 1);
+  --p-color-bg-surface-tertiary:      rgba(243, 243, 243, 1);
+  --p-color-bg-surface-hover:         rgba(247, 247, 247, 1);
+  --p-color-bg-surface-selected:      rgba(241, 241, 241, 1);
+  --p-color-input-bg-surface:         rgba(253, 253, 253, 1);
+  /* text */
+  --p-color-text:                     rgba(48, 48, 48, 1);
+  --p-color-text-secondary:           rgba(97, 97, 97, 1);
+  --p-color-text-link:                rgba(0, 91, 211, 1);
+  --p-color-text-brand-on-bg-fill:    rgba(255, 255, 255, 1);
+  /* line */
+  --p-color-border:                   rgba(227, 227, 227, 1);
+  --p-color-border-secondary:         rgba(235, 235, 235, 1);
+  --p-color-border-focus:             rgba(0, 91, 211, 1);
+  /* fill */
+  --p-color-bg-fill-brand:            rgba(48, 48, 48, 1);
+  --p-color-bg-fill-brand-hover:      rgba(26, 26, 26, 1);
+  --p-color-bg-fill-transparent:      rgba(0, 0, 0, 0.02);
+  --p-color-bg-fill-transparent-hover:rgba(0, 0, 0, 0.05);
+  --p-color-bg-fill-transparent-secondary: rgba(0, 0, 0, 0.06);
+  /* status */
+  --p-color-bg-fill-success-secondary:  rgba(175, 254, 191, 1);
+  --p-color-bg-fill-critical-secondary: rgba(254, 209, 215, 1);
+  --p-color-bg-fill-warning-secondary:  rgba(255, 214, 164, 1);
+  --p-color-bg-fill-info-secondary:     rgba(213, 235, 255, 1);
+  --p-color-text-success:             rgba(1, 75, 64, 1);
+  --p-color-text-critical:            rgba(142, 11, 33, 1);
+  --p-color-text-warning:             rgba(94, 66, 0, 1);
+  --p-color-text-info:                rgba(0, 58, 90, 1);
+  /* the chart ramp: Polaris data-viz leans on its blues */
+  --p-chart:                          rgba(0, 91, 211, 1);
+  /* shape */
+  --p-border-radius-100: 0.25rem;
+  --p-border-radius-150: 0.375rem;
+  --p-border-radius-200: 0.5rem;
+  --p-border-radius-300: 0.75rem;
+  --p-border-width-025: 0.0625rem;
+  /* elevation: Polaris separates with shadow, not a hairline */
+  --p-shadow-100: 0rem 0.0625rem 0rem 0rem rgba(26, 26, 26, 0.07);
+  --p-shadow-200: 0rem 0.1875rem 0.0625rem -0.0625rem rgba(26, 26, 26, 0.07);
+  --p-shadow-border-inset: 0rem 0rem 0rem 0.0625rem rgba(0, 0, 0, 0.08) inset;
+  /* the signature bevel on a Shopify button */
+  --p-shadow-button: 0rem -0.0625rem 0rem 0rem #b5b5b5 inset,
+                     0rem 0rem 0rem 0.0625rem rgba(0, 0, 0, 0.1) inset,
+                     0rem 0.03125rem 0rem 0.09375rem #FFF inset;
+  --p-shadow-button-primary: 0rem -0.0625rem 0rem 0.0625rem rgba(0, 0, 0, 0.8) inset,
+                             0rem 0rem 0rem 0.0625rem rgba(48, 48, 48, 1) inset,
+                             0rem 0.03125rem 0rem 0.09375rem rgba(255, 255, 255, 0.25) inset;
+  --p-color-button-gradient-bg-fill: linear-gradient(180deg, rgba(48, 48, 48, 0) 63.53%, rgba(255, 255, 255, 0.15) 100%);
+  /* type */
+  --p-font-family-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'San Francisco', 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  --p-font-family-mono: ui-monospace, SFMono-Regular, 'SF Mono', Consolas, 'Liberation Mono', Menlo, monospace;
+  --p-font-weight-regular: 450;
+  --p-font-weight-medium: 550;
+  --p-font-weight-semibold: 650;
+  --p-font-weight-bold: 700;
+  /* space */
+  --p-space-100: 0.25rem;
+  --p-space-200: 0.5rem;
+  --p-space-300: 0.75rem;
+  --p-space-400: 1rem;
+  --p-space-500: 1.25rem;
+  --p-space-600: 1.5rem;
 }
+/* Polaris ships a dark theme as experimental; these are its published overrides. */
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:hsl(240 3% 6%); --side:hsl(240 6% 10%); --fg:#FFFFFF; --fg2:rgba(255,255,255,.64);
-  --muted:rgba(255,255,255,.05); --border:rgba(255,255,255,.075); --control:rgba(255,255,255,.13);
-  --primary:hsl(210 20% 98%); --on-primary:hsl(240 3% 6%);
-  --ok:#4ADE80; --ok-bg:rgba(74,222,128,.12);
-  --warn-bg:rgba(255,255,255,.06);
-  --bad:#F87171; --bad-bg:rgba(248,113,113,.12);
+  --p-color-bg:                       rgba(26, 26, 26, 1);
+  --p-color-bg-surface:               rgba(48, 48, 48, 1);
+  --p-color-bg-surface-secondary:     rgba(38, 38, 38, 1);
+  --p-color-bg-surface-tertiary:      rgba(255, 255, 255, 0.08);
+  --p-color-bg-surface-hover:         rgba(74, 74, 74, 1);
+  --p-color-bg-surface-selected:      rgba(97, 97, 97, 1);
+  --p-color-input-bg-surface:         rgba(48, 48, 48, 1);
+  --p-color-text:                     rgba(227, 227, 227, 1);
+  --p-color-text-secondary:           rgba(181, 181, 181, 1);
+  --p-color-text-link:                rgba(145, 208, 255, 1);
+  --p-color-text-brand-on-bg-fill:    rgba(48, 48, 48, 1);
+  --p-color-border:                   rgba(97, 97, 97, 1);
+  --p-color-border-secondary:         rgba(74, 74, 74, 1);
+  --p-color-bg-fill-brand:            rgba(255, 255, 255, 1);
+  --p-color-bg-fill-brand-hover:      rgba(227, 227, 227, 1);
+  --p-color-bg-fill-transparent:      rgba(255, 255, 255, 0.05);
+  --p-color-bg-fill-transparent-hover:rgba(255, 255, 255, 0.11);
+  --p-color-bg-fill-transparent-secondary: rgba(255, 255, 255, 0.08);
+  --p-color-bg-fill-success-secondary:  rgba(1, 75, 64, 1);
+  --p-color-bg-fill-critical-secondary: rgba(142, 11, 33, 1);
+  --p-color-bg-fill-warning-secondary:  rgba(94, 66, 0, 1);
+  --p-color-bg-fill-info-secondary:     rgba(0, 58, 90, 1);
+  --p-color-text-success:             rgba(175, 254, 191, 1);
+  --p-color-text-critical:            rgba(254, 209, 215, 1);
+  --p-color-text-warning:             rgba(255, 214, 164, 1);
+  --p-color-text-info:                rgba(213, 235, 255, 1);
+  --p-chart:                          rgba(145, 208, 255, 1);
+  --p-shadow-100: 0rem 0.0625rem 0rem 0rem rgba(0, 0, 0, 0.32);
+  --p-shadow-200: 0rem 0.1875rem 0.0625rem -0.0625rem rgba(0, 0, 0, 0.32);
+  --p-shadow-button: 0rem 0rem 0rem 0.0625rem rgba(255, 255, 255, 0.13) inset;
+  --p-shadow-button-primary: 0rem 0rem 0rem 0.0625rem rgba(0, 0, 0, 0.3) inset;
+  --p-color-button-gradient-bg-fill: none;
 }}
 :root[data-theme="dark"]{
-  --bg:hsl(240 3% 6%); --side:hsl(240 6% 10%); --fg:#FFFFFF; --fg2:rgba(255,255,255,.64);
-  --muted:rgba(255,255,255,.05); --border:rgba(255,255,255,.075); --control:rgba(255,255,255,.13);
-  --primary:hsl(210 20% 98%); --on-primary:hsl(240 3% 6%);
-  --ok:#4ADE80; --ok-bg:rgba(74,222,128,.12);
-  --warn-bg:rgba(255,255,255,.06);
-  --bad:#F87171; --bad-bg:rgba(248,113,113,.12);
+  --p-color-bg:rgba(26,26,26,1); --p-color-bg-surface:rgba(48,48,48,1);
+  --p-color-bg-surface-secondary:rgba(38,38,38,1); --p-color-bg-surface-tertiary:rgba(255,255,255,0.08);
+  --p-color-bg-surface-hover:rgba(74,74,74,1); --p-color-bg-surface-selected:rgba(97,97,97,1);
+  --p-color-input-bg-surface:rgba(48,48,48,1);
+  --p-color-text:rgba(227,227,227,1); --p-color-text-secondary:rgba(181,181,181,1);
+  --p-color-text-link:rgba(145,208,255,1); --p-color-text-brand-on-bg-fill:rgba(48,48,48,1);
+  --p-color-border:rgba(97,97,97,1); --p-color-border-secondary:rgba(74,74,74,1);
+  --p-color-bg-fill-brand:rgba(255,255,255,1); --p-color-bg-fill-brand-hover:rgba(227,227,227,1);
+  --p-color-bg-fill-transparent:rgba(255,255,255,0.05);
+  --p-color-bg-fill-transparent-hover:rgba(255,255,255,0.11);
+  --p-color-bg-fill-transparent-secondary:rgba(255,255,255,0.08);
+  --p-color-bg-fill-success-secondary:rgba(1,75,64,1);
+  --p-color-bg-fill-critical-secondary:rgba(142,11,33,1);
+  --p-color-bg-fill-warning-secondary:rgba(94,66,0,1);
+  --p-color-bg-fill-info-secondary:rgba(0,58,90,1);
+  --p-color-text-success:rgba(175,254,191,1); --p-color-text-critical:rgba(254,209,215,1);
+  --p-color-text-warning:rgba(255,214,164,1); --p-color-text-info:rgba(213,235,255,1);
+  --p-chart:rgba(145,208,255,1);
+  --p-shadow-100:0rem 0.0625rem 0rem 0rem rgba(0,0,0,0.32);
+  --p-shadow-200:0rem 0.1875rem 0.0625rem -0.0625rem rgba(0,0,0,0.32);
+  --p-shadow-button:0rem 0rem 0rem 0.0625rem rgba(255,255,255,0.13) inset;
+  --p-shadow-button-primary:0rem 0rem 0rem 0.0625rem rgba(0,0,0,0.3) inset;
+  --p-color-button-gradient-bg-fill:none;
 }
+
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
-body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:14px;line-height:20px;-webkit-font-smoothing:antialiased}
+body{
+  background:var(--p-color-bg);
+  color:var(--p-color-text);
+  font-family:var(--p-font-family-sans);
+  font-size:0.8125rem;      /* Polaris body-md */
+  line-height:1.25rem;
+  font-weight:var(--p-font-weight-regular);
+  -webkit-font-smoothing:antialiased;
+}
 a{color:inherit;text-decoration:none}
-a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--fg);outline-offset:2px;border-radius:6px}
+a:focus-visible,button:focus-visible,input:focus-visible{
+  outline:0.125rem solid var(--p-color-border-focus);outline-offset:0.0625rem;
+  border-radius:var(--p-border-radius-100);
+}
 
 .shell{display:flex;min-height:100vh}
 
-/* sidebar */
-.side{flex:0 0 208px;width:208px;background:var(--side);border-right:1px solid var(--border);padding:16px 12px;display:flex;flex-direction:column;gap:22px}
-.brand{display:flex;align-items:center;gap:8px;padding:4px 8px 0;font-weight:500;font-size:14px;letter-spacing:-.01em}
+/* ---- nav: Polaris admin sits on the grey ground, the selected row goes white */
+.side{
+  flex:0 0 15rem;width:15rem;padding:var(--p-space-300);
+  display:flex;flex-direction:column;gap:var(--p-space-400);
+}
+.brand{
+  display:flex;align-items:center;gap:var(--p-space-200);
+  padding:var(--p-space-200) var(--p-space-200) 0;
+  font-weight:var(--p-font-weight-semibold);font-size:0.875rem;
+}
 .brand .glyph{flex:0 0 auto}
-.navgroup{display:flex;flex-direction:column;gap:2px}
-.navgroup h6{margin:0 0 6px;padding:0 8px;font-size:11px;line-height:16px;font-weight:400;color:var(--fg2)}
-.navgroup a{display:flex;align-items:center;gap:9px;height:30px;padding:0 8px;border-radius:8px;font-size:13px;color:var(--fg);transition:background .15s cubic-bezier(.4,0,.2,1)}
-.navgroup a:hover{background:var(--muted)}
-.navgroup a.on{background:var(--muted);font-weight:500}
-.navgroup svg{color:var(--fg2);flex:0 0 auto}
-.navgroup a.on svg{color:var(--fg)}
-.side .foot{margin-top:auto;padding:0 8px;font-family:var(--mono);font-size:10.5px;line-height:16px;color:var(--fg2)}
+.navgroup{display:flex;flex-direction:column;gap:0.125rem}
+.navgroup h6{
+  margin:var(--p-space-200) 0 var(--p-space-100);padding:0 var(--p-space-200);
+  font-size:0.75rem;line-height:1rem;font-weight:var(--p-font-weight-medium);
+  color:var(--p-color-text-secondary);
+}
+.navgroup a{
+  display:flex;align-items:center;gap:var(--p-space-200);
+  min-height:2rem;padding:0 var(--p-space-200);
+  border-radius:var(--p-border-radius-200);
+  font-size:0.8125rem;font-weight:var(--p-font-weight-medium);
+  color:var(--p-color-text);
+  transition:background-color .1s ease;
+}
+.navgroup a:hover{background:var(--p-color-bg-fill-transparent-hover)}
+.navgroup a.on{background:var(--p-color-bg-surface);box-shadow:var(--p-shadow-100)}
+.navgroup svg{color:var(--p-color-text-secondary);flex:0 0 auto}
+.navgroup a.on svg{color:var(--p-color-text)}
+.side .foot{
+  margin-top:auto;padding:0 var(--p-space-200);
+  font-family:var(--p-font-family-mono);font-size:0.6875rem;line-height:1rem;
+  color:var(--p-color-text-secondary);
+}
 
-/* main */
+/* ---- main */
 .main{flex:1 1 auto;min-width:0;display:flex;flex-direction:column}
-.topbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;height:52px;padding:0 24px;border-bottom:1px solid var(--border)}
-.crumb{font-size:13px;color:var(--fg2)}
-.crumb a:hover{color:var(--fg)}
+.topbar{
+  display:flex;align-items:center;gap:var(--p-space-300);flex-wrap:wrap;
+  padding:var(--p-space-300) var(--p-space-500);
+}
+.crumb{font-size:0.8125rem;color:var(--p-color-text-secondary)}
+.crumb a{color:var(--p-color-text-link)}
+.crumb a:hover{text-decoration:underline}
 .topbar .spacer{flex:1 1 auto}
-.content{padding:28px 24px 64px;max-width:1240px;width:100%}
+.content{padding:0 var(--p-space-500) var(--p-space-600);max-width:75rem;width:100%}
 
-.eyebrow{font-size:12px;line-height:16px;color:var(--fg2);margin:0 0 6px}
-h1{font-family:var(--display);font-weight:500;font-size:24px;line-height:30px;letter-spacing:-.006em;margin:0 0 18px}
-h2{font-family:var(--display);font-weight:500;font-size:16px;line-height:22px;letter-spacing:-.004em;margin:0}
-h3{font-family:var(--display);font-weight:500;font-size:15px;line-height:21px;margin:0 0 10px}
-p.note{color:var(--fg2);font-size:13px;line-height:20px;margin:0 0 16px;max-width:74ch}
+.eyebrow{font-size:0.75rem;line-height:1rem;color:var(--p-color-text-secondary);margin:0 0 var(--p-space-100)}
+h1{font-size:1.5rem;line-height:2rem;font-weight:var(--p-font-weight-bold);margin:0 0 var(--p-space-400)}
+h2{font-size:0.875rem;line-height:1.25rem;font-weight:var(--p-font-weight-semibold);margin:0}
+h3{font-size:0.8125rem;line-height:1.25rem;font-weight:var(--p-font-weight-semibold);margin:0 0 var(--p-space-200)}
+p.note{
+  color:var(--p-color-text-secondary);font-size:0.8125rem;line-height:1.25rem;
+  margin:0 0 var(--p-space-400);max-width:70ch;
+}
 
-.pill{display:inline-flex;align-items:center;gap:7px;height:28px;padding:0 12px;border-radius:999px;border:1px solid var(--control);font-size:12.5px;font-weight:500;white-space:nowrap}
-.pill .dot{width:6px;height:6px;border-radius:50%;background:var(--fg);flex:0 0 auto}
-.pill.warn .dot{background:var(--bad)}
+/* ---- Polaris Badge */
+.badge{
+  display:inline-flex;align-items:center;
+  padding:0.125rem var(--p-space-200);border-radius:var(--p-border-radius-200);
+  font-size:0.75rem;line-height:1rem;font-weight:var(--p-font-weight-medium);
+  background:var(--p-color-bg-fill-transparent-secondary);color:var(--p-color-text-secondary);
+  white-space:nowrap;
+}
+.badge.up{background:var(--p-color-bg-fill-success-secondary);color:var(--p-color-text-success)}
+.badge.down{background:var(--p-color-bg-fill-critical-secondary);color:var(--p-color-text-critical)}
+.badge.flat{background:var(--p-color-bg-fill-transparent-secondary);color:var(--p-color-text-secondary)}
+.badge.info{background:var(--p-color-bg-fill-info-secondary);color:var(--p-color-text-info)}
 
-.ctlbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 16px}
-.ctl{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 10px;border-radius:8px;border:1px solid var(--control);background:transparent;font-family:inherit;font-size:13px;line-height:20px;font-weight:500;color:var(--fg);white-space:nowrap;cursor:default;transition:background .15s cubic-bezier(.4,0,.2,1)}
-a.ctl{cursor:pointer}
-a.ctl:hover,button.ctl:hover{background:var(--muted)}
-button.ctl{cursor:pointer}
-.ctl .lbl{color:var(--fg2);font-weight:400}
-.ctl svg{color:var(--fg2);flex:0 0 auto}
-input.ctl,select.ctl{cursor:text;font-weight:400;min-width:180px}
-select.ctl{cursor:pointer}
-input.ctl::placeholder{color:var(--fg2)}
+.pill{
+  display:inline-flex;align-items:center;gap:var(--p-space-200);
+  padding:0.1875rem var(--p-space-300);border-radius:var(--p-border-radius-200);
+  background:var(--p-color-bg-surface);box-shadow:var(--p-shadow-100),var(--p-shadow-border-inset);
+  font-size:0.75rem;line-height:1rem;font-weight:var(--p-font-weight-medium);white-space:nowrap;
+}
+.pill .dot{width:0.5rem;height:0.5rem;border-radius:50%;background:var(--p-color-text-success);flex:0 0 auto}
+.pill.warn .dot{background:var(--p-color-text-critical)}
 
-.badge{display:inline-flex;align-items:center;height:22px;padding:0 9px;border-radius:6px;font-size:12px;font-weight:500;line-height:16px;white-space:nowrap}
-.badge.up{background:var(--ok-bg);color:var(--ok)}
-.badge.down{background:var(--bad-bg);color:var(--bad)}
-.badge.flat{background:var(--warn-bg);color:var(--fg2)}
+/* ---- Polaris Button: the bevel is the signature */
+.ctlbar{display:flex;flex-wrap:wrap;gap:var(--p-space-200);align-items:center;margin:0 0 var(--p-space-400)}
+.ctl{
+  display:inline-flex;align-items:center;gap:var(--p-space-100);
+  min-height:2rem;padding:0 var(--p-space-300);
+  border:0;border-radius:var(--p-border-radius-200);
+  background:var(--p-color-bg-surface);
+  box-shadow:var(--p-shadow-button);
+  font-family:inherit;font-size:0.8125rem;line-height:1.25rem;
+  font-weight:var(--p-font-weight-medium);color:var(--p-color-text);
+  white-space:nowrap;cursor:default;transition:background-color .1s ease;
+}
+a.ctl,button.ctl{cursor:pointer}
+a.ctl:hover,button.ctl:hover{background:var(--p-color-bg-surface-hover)}
+.ctl .lbl{color:var(--p-color-text-secondary);font-weight:var(--p-font-weight-regular)}
+.ctl svg{color:var(--p-color-text-secondary);flex:0 0 auto}
+.ctl.primary{
+  background:var(--p-color-button-gradient-bg-fill),var(--p-color-bg-fill-brand);
+  box-shadow:var(--p-shadow-button-primary);color:var(--p-color-text-brand-on-bg-fill);
+}
+.ctl.primary svg{color:inherit}
+input.ctl{
+  cursor:text;font-weight:var(--p-font-weight-regular);min-width:15rem;
+  background:var(--p-color-input-bg-surface);box-shadow:var(--p-shadow-border-inset);
+}
+input.ctl::placeholder{color:var(--p-color-text-secondary)}
 
-.card{border:1px solid var(--border);border-radius:14px;background:var(--bg);overflow:hidden}
-
-/* metric strip */
-.strip{display:flex;overflow-x:auto;scrollbar-width:thin}
-.cell{flex:1 0 148px;padding:14px 16px 12px;border-right:1px solid var(--border);border-bottom:2px solid transparent;background:none;text-align:left;font-family:inherit;color:inherit;cursor:pointer;transition:background .15s cubic-bezier(.4,0,.2,1)}
-.cell:last-child{border-right:none}
-.cell:hover{background:var(--muted)}
-.cell[aria-pressed="true"]{background:var(--muted);border-bottom-color:var(--fg)}
-.cell .lab{font-size:12px;line-height:16px;color:var(--fg2);margin-bottom:5px;white-space:nowrap}
-.cell .val{font-size:19px;line-height:26px;font-weight:500;font-variant-numeric:tabular-nums;white-space:nowrap}
-.cell .val small{font-size:12px;font-weight:400;color:var(--fg2)}
-.plot{padding:16px 16px 10px;border-top:1px solid var(--border)}
-.plot svg{display:block;width:100%;height:170px}
-.axis{display:flex;justify-content:space-between;font-size:11px;line-height:16px;color:var(--fg2);padding-top:6px;font-variant-numeric:tabular-nums}
-
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
-@media (max-width:900px){.grid2{grid-template-columns:1fr}.grid2 .videos{order:-1}}
-.panel{border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:16px}
-.panel .hd{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--border)}
+/* ---- Polaris Card */
+.card,.panel{
+  background:var(--p-color-bg-surface);
+  border-radius:var(--p-border-radius-300);
+  box-shadow:var(--p-shadow-100),var(--p-shadow-border-inset);
+  overflow:hidden;
+}
+.panel{margin-bottom:var(--p-space-400)}
+.panel .hd{
+  display:flex;align-items:center;gap:var(--p-space-300);
+  padding:var(--p-space-300) var(--p-space-400);
+}
 .panel .hd .spacer{flex:1 1 auto}
-.panel .hd .meta{font-size:12px;color:var(--fg2)}
-.panel .bd{padding:4px 16px 8px}
+.panel .hd .meta{font-size:0.75rem;color:var(--p-color-text-secondary)}
+.panel .bd{padding:0 var(--p-space-400) var(--p-space-200)}
 .panel .bd.flush{padding:0}
 
-.rowitem{display:flex;gap:12px;align-items:center;padding:11px 0;border-bottom:1px solid var(--border)}
-.rowitem:last-child{border-bottom:none}
-.rank{font-family:var(--mono);font-size:12px;color:var(--fg2);width:22px;flex:0 0 auto;font-variant-numeric:tabular-nums}
-.thumb{flex:0 0 auto;width:40px;height:40px;border-radius:8px;border:1px solid var(--border);background:var(--muted);object-fit:cover;display:block}
-.thumb.tall{width:40px;height:56px}
-.ph{display:flex;align-items:center;justify-content:center}
-.ph svg{color:var(--fg2)}
-.body{flex:1 1 auto;min-width:0}
-.body .t{font-size:13.5px;line-height:19px;font-weight:500;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-a.t:hover{text-decoration:underline;text-underline-offset:2px}
-.body .s{font-size:12px;line-height:18px;color:var(--fg2);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.num{flex:0 0 auto;text-align:right}
-.num .a{font-size:13.5px;line-height:19px;font-weight:500;font-variant-numeric:tabular-nums;display:block}
-.num .b{font-size:12px;line-height:18px;color:var(--fg2);font-variant-numeric:tabular-nums}
-.share{height:4px;border-radius:2px;background:var(--muted);overflow:hidden;margin-top:6px;max-width:260px}
-.share i{display:block;height:100%;background:var(--c3)}
+/* ---- metric strip */
+.strip{display:flex;overflow-x:auto;scrollbar-width:thin}
+.cell{
+  flex:1 0 9.5rem;padding:var(--p-space-300) var(--p-space-400);
+  border:0;border-right:var(--p-border-width-025) solid var(--p-color-border-secondary);
+  border-bottom:0.125rem solid transparent;
+  background:none;text-align:left;font-family:inherit;color:inherit;cursor:pointer;
+  transition:background-color .1s ease;
+}
+.cell:last-child{border-right:0}
+.cell:hover{background:var(--p-color-bg-surface-hover)}
+.cell[aria-pressed="true"]{
+  background:var(--p-color-bg-surface-secondary);border-bottom-color:var(--p-color-bg-fill-brand);
+}
+.cell .lab{
+  font-size:0.75rem;line-height:1rem;color:var(--p-color-text-secondary);
+  margin-bottom:var(--p-space-100);white-space:nowrap;
+}
+.cell .val{
+  font-size:1.25rem;line-height:1.5rem;font-weight:var(--p-font-weight-semibold);
+  font-variant-numeric:tabular-nums;white-space:nowrap;
+}
+.cell .val small{font-size:0.75rem;font-weight:var(--p-font-weight-regular);color:var(--p-color-text-secondary)}
+.plot{padding:var(--p-space-400);border-top:var(--p-border-width-025) solid var(--p-color-border-secondary)}
+.plot svg{display:block;width:100%;height:10.625rem}
+.axis{
+  display:flex;justify-content:space-between;font-size:0.75rem;line-height:1rem;
+  color:var(--p-color-text-secondary);padding-top:var(--p-space-200);font-variant-numeric:tabular-nums;
+}
 
-/* table */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:var(--p-space-400);margin-top:var(--p-space-400)}
+@media (max-width:56rem){.grid2{grid-template-columns:1fr}.grid2 .videos{order:-1}}
+
+/* ---- list rows */
+.rowitem{
+  display:flex;gap:var(--p-space-300);align-items:center;
+  padding:var(--p-space-300) 0;
+  border-top:var(--p-border-width-025) solid var(--p-color-border-secondary);
+}
+.rowitem:first-child{border-top:0}
+.rank{
+  font-family:var(--p-font-family-mono);font-size:0.75rem;color:var(--p-color-text-secondary);
+  width:1.5rem;flex:0 0 auto;font-variant-numeric:tabular-nums;
+}
+.thumb{
+  flex:0 0 auto;width:2.5rem;height:2.5rem;border-radius:var(--p-border-radius-200);
+  background:var(--p-color-bg-surface-secondary);box-shadow:var(--p-shadow-border-inset);
+  object-fit:cover;display:block;
+}
+.thumb.tall{width:2.5rem;height:3.5rem}
+.ph{display:flex;align-items:center;justify-content:center}
+.ph svg{color:var(--p-color-text-secondary)}
+.body{flex:1 1 auto;min-width:0}
+.body .t{
+  font-size:0.8125rem;line-height:1.25rem;font-weight:var(--p-font-weight-medium);
+  display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+a.t{color:var(--p-color-text-link)}
+a.t:hover{text-decoration:underline}
+.body .s{
+  font-size:0.75rem;line-height:1rem;color:var(--p-color-text-secondary);
+  margin-top:0.125rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.num{flex:0 0 auto;text-align:right}
+.num .a{
+  font-size:0.8125rem;line-height:1.25rem;font-weight:var(--p-font-weight-semibold);
+  font-variant-numeric:tabular-nums;display:block;
+}
+.num .b{font-size:0.75rem;line-height:1rem;color:var(--p-color-text-secondary);font-variant-numeric:tabular-nums}
+.share{
+  height:0.25rem;border-radius:var(--p-border-radius-100);
+  background:var(--p-color-bg-fill-transparent-secondary);
+  overflow:hidden;margin-top:var(--p-space-100);max-width:16rem;
+}
+.share i{display:block;height:100%;background:var(--p-chart)}
+
+/* ---- Polaris IndexTable */
 .tablewrap{overflow-x:auto}
-table{border-collapse:collapse;width:100%;font-size:13px}
+table{border-collapse:collapse;width:100%;font-size:0.8125rem}
 thead th{
-  text-align:left;font-weight:400;font-size:11px;letter-spacing:.06em;text-transform:uppercase;
-  color:var(--fg2);padding:10px 14px;border-bottom:1px solid var(--border);white-space:nowrap;
-  background:var(--bg);position:sticky;top:0;
+  background:var(--p-color-bg-surface-secondary);
+  padding:var(--p-space-200) var(--p-space-300);
+  text-align:left;white-space:nowrap;border:0;
+  font-size:0.75rem;line-height:1rem;
+  font-weight:var(--p-font-weight-medium);color:var(--p-color-text-secondary);
+  position:sticky;top:0;
 }
 thead th.sortable{cursor:pointer;user-select:none}
-thead th.sortable:hover{color:var(--fg)}
-thead th[aria-sort]{color:var(--fg)}
-thead th .arrow{opacity:0;margin-left:4px}
+thead th.sortable:hover{color:var(--p-color-text)}
+thead th[aria-sort]{color:var(--p-color-text)}
+thead th .arrow{opacity:0;margin-left:0.25rem}
 thead th[aria-sort] .arrow{opacity:1}
-tbody td{padding:11px 14px;border-bottom:1px solid var(--border);vertical-align:middle}
-tbody tr:last-child td{border-bottom:none}
-tbody tr:hover{background:var(--muted)}
+tbody td{
+  padding:var(--p-space-300);
+  border-top:var(--p-border-width-025) solid var(--p-color-border-secondary);
+  vertical-align:middle;
+}
+tbody tr:hover{background:var(--p-color-bg-surface-hover)}
 td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
-td.prod{min-width:280px;max-width:420px}
-td.prod .wrap{display:flex;gap:10px;align-items:center}
-td.prod .t{font-weight:500;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-td.prod .s{font-size:12px;color:var(--fg2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.empty-row td{padding:32px 14px;text-align:center;color:var(--fg2)}
+td.prod{min-width:18rem;max-width:26rem}
+td.prod .wrap{display:flex;gap:var(--p-space-300);align-items:center}
+td.prod .t{font-weight:var(--p-font-weight-medium);display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+td.prod .s{font-size:0.75rem;color:var(--p-color-text-secondary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.empty-row td{padding:var(--p-space-600) var(--p-space-300);text-align:center;color:var(--p-color-text-secondary)}
 
-.health{display:flex;flex-wrap:wrap;gap:10px 28px;margin-top:16px;padding:16px;border:1px solid var(--border);border-radius:14px}
-.health .u{display:flex;flex-direction:column;gap:3px}
-.health .u .k{font-size:12px;color:var(--fg2)}
-.health .u .v{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
+/* ---- health tiles */
+.health{
+  display:flex;flex-wrap:wrap;gap:var(--p-space-300) var(--p-space-600);
+  margin-top:var(--p-space-400);padding:var(--p-space-400);
+  background:var(--p-color-bg-surface);border-radius:var(--p-border-radius-300);
+  box-shadow:var(--p-shadow-100),var(--p-shadow-border-inset);
+}
+.health .u{display:flex;flex-direction:column;gap:0.125rem}
+.health .u .k{font-size:0.75rem;color:var(--p-color-text-secondary)}
+.health .u .v{font-size:0.875rem;font-weight:var(--p-font-weight-semibold);font-variant-numeric:tabular-nums}
 
-.empty{padding:44px 16px;text-align:center;color:var(--fg2)}
-.empty svg{color:var(--fg2);opacity:.5;margin-bottom:10px}
-.empty p{margin:0;font-size:13px;line-height:20px}
-.empty p+p{margin-top:4px;font-size:12px}
+.empty{padding:var(--p-space-600) var(--p-space-400);text-align:center;color:var(--p-color-text-secondary)}
+.empty svg{color:var(--p-color-text-secondary);opacity:.4;margin-bottom:var(--p-space-200)}
+.empty p{margin:0;font-size:0.8125rem;line-height:1.25rem}
+.empty p+p{margin-top:var(--p-space-100);font-size:0.75rem}
 
-.kv{display:grid;grid-template-columns:auto 1fr;gap:8px 18px;font-size:13px;padding:14px 16px}
-.kv dt{color:var(--fg2)}
+.kv{
+  display:grid;grid-template-columns:auto 1fr;gap:var(--p-space-200) var(--p-space-400);
+  font-size:0.8125rem;padding:var(--p-space-300) var(--p-space-400) var(--p-space-400);
+}
+.kv dt{color:var(--p-color-text-secondary)}
 .kv dd{margin:0;font-variant-numeric:tabular-nums}
 
-@media (max-width:760px){
+/* ---- small screens: the nav becomes a scrolling strip rather than vanishing */
+@media (max-width:47.5rem){
   .shell{flex-direction:column}
   .side{
-    flex:0 0 auto;width:100%;border-right:none;border-bottom:1px solid var(--border);
-    flex-direction:row;align-items:center;gap:0;padding:8px 12px;
-    overflow-x:auto;scrollbar-width:none;
+    flex:0 0 auto;width:100%;flex-direction:row;align-items:center;gap:0;
+    padding:var(--p-space-200) var(--p-space-300);overflow-x:auto;scrollbar-width:none;
+    background:var(--p-color-bg-surface);box-shadow:var(--p-shadow-100);
   }
   .side::-webkit-scrollbar{display:none}
-  .side .brand{padding:0 12px 0 4px;white-space:nowrap;flex:0 0 auto}
+  .side .brand{padding:0 var(--p-space-300) 0 var(--p-space-100);white-space:nowrap;flex:0 0 auto}
   .side .foot{display:none}
-  .navgroup{flex-direction:row;gap:4px;flex:0 0 auto}
+  .navgroup{flex-direction:row;gap:var(--p-space-100);flex:0 0 auto}
   .navgroup h6{display:none}
-  .navgroup a{white-space:nowrap;padding:0 10px}
-  .topbar{height:auto;padding:10px 16px;gap:8px}
-  .topbar .crumb{display:none}
-  .topbar .spacer{display:none}
-  .content{padding:20px 16px 48px}
-  td.prod{min-width:200px}
-  h1{font-size:21px;line-height:27px}
-  .cell{flex:1 0 128px}
-  input.ctl,select.ctl{min-width:0;flex:1 1 160px}
-  .ctlbar{gap:6px}
-  .health{gap:10px 20px}
+  .navgroup a{white-space:nowrap}
+  .navgroup a.on{background:var(--p-color-bg-surface-selected);box-shadow:none}
+  .topbar{padding:var(--p-space-300)}
+  .topbar .crumb,.topbar .spacer{display:none}
+  .content{padding:0 var(--p-space-300) var(--p-space-600)}
+  td.prod{min-width:13rem}
+  h1{font-size:1.25rem;line-height:1.5rem}
+  .cell{flex:1 0 8rem}
+  input.ctl{min-width:0;flex:1 1 10rem}
 }
-@media (max-width:420px){
+@media (max-width:26rem){
   .side .brand .name{display:none}
-  .navgroup a{font-size:12.5px;padding:0 8px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>

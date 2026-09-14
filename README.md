@@ -147,9 +147,20 @@ This reads publicly visible TikTok Shop data through a third-party API. That run
 
 ## Design
 
-The dashboard copies [ElevenLabs](https://elevenlabs.io)' app surface: their palette, their 14/20 Inter type scale, hairlines instead of shadows, greyed icons that only darken on the active row, and colour confined to the chart ramp and status pills. Icons are drawn on their measured grid — `viewBox="0 0 18 18"`, `stroke-width="1.5"`, round caps and joins, `currentColor` — in `src/shopledger/icons.py`.
+The dashboard uses [Shopify Polaris](https://polaris.shopify.com), because the people this is for already spend their day in Shopify admin and a tool that matches it feels like it belongs.
 
-The whole dashboard is one template at `src/shopledger/templates/dashboard.html` with `__TOKEN__` placeholders. There is no build step and no framework, so restyling it means editing one file.
+Token values are lifted verbatim from `@shopify/polaris-tokens` 9.4.2 and kept under their Polaris names, so any colour, size or shadow can be traced back to source. The four moves that make it read as Polaris:
+
+- The page is grey (`#F1F1F1`) and the cards are white. Most admin systems do the opposite.
+- Shadows separate surfaces, not hairlines.
+- The button carries Polaris's three-inset bevel, which is the single most recognisable thing in the system.
+- Font weights are 450 / 550 / 650 / 700. A design using 400 / 500 / 600 is a guess at Polaris, not Polaris.
+
+Icons come from `@shopify/polaris-icons` 9.3.1 verbatim: filled, `viewBox="0 0 20 20"`, `fill="currentColor"`. Each one in `src/shopledger/icons.py` is annotated with its source name.
+
+Polaris is MIT. Shopify's wordmark, logo and name are trademarks and are deliberately not used here — this borrows the open-source design language, not the brand.
+
+The whole look lives in `src/shopledger/templates/base.html` with `__TOKEN__` placeholders. No build step, no framework, so restyling means editing one file.
 
 ## Development
 

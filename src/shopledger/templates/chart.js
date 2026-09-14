@@ -5,6 +5,8 @@
   if (!svg || typeof SERIES === "undefined") return;
 
   var NS = "http://www.w3.org/2000/svg";
+  var STROKE = getComputedStyle(document.documentElement)
+    .getPropertyValue("--p-chart").trim() || "#005BD3";
   var W = 760, H = 170, L = 44, R = 8, T = 12, B = 26;
 
   function el(name, attrs) {
@@ -58,13 +60,13 @@
 
     svg.appendChild(el("polyline", {
       points: points.map(function (p) { return p[0] + "," + p[1]; }).join(" "),
-      fill: "none", stroke: "#2563EB", "stroke-width": 1.5,
+      fill: "none", stroke: STROKE, "stroke-width": 2,
       "stroke-linejoin": "round", "stroke-linecap": "round",
       "vector-effect": "non-scaling-stroke"
     }));
 
     var last = points[points.length - 1];
-    svg.appendChild(el("circle", { cx: last[0], cy: last[1], r: 3, fill: "#2563EB" }));
+    svg.appendChild(el("circle", { cx: last[0], cy: last[1], r: 3.5, fill: STROKE }));
   }
 
   var cells = Array.prototype.slice.call(document.querySelectorAll(".cell"));
