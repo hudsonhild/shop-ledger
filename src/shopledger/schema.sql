@@ -85,6 +85,8 @@ CREATE TABLE IF NOT EXISTS daily_result (
   unattributed    INTEGER NOT NULL DEFAULT 0,
   sold_delta      INTEGER,
   stock_delta     INTEGER,
+  interval_hours  REAL,        -- the real gap between the two snapshots
+  partial         INTEGER NOT NULL DEFAULT 0,  -- interval well short of a day
   PRIMARY KEY (product_id, day)
 );
 CREATE INDEX IF NOT EXISTS ix_result_day ON daily_result(day);

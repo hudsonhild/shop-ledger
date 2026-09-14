@@ -14,10 +14,24 @@ from __future__ import annotations
 
 import sqlite3
 from dataclasses import dataclass, field
+from datetime import datetime
 from statistics import median
 
 from . import db
 from .config import Config
+
+# Below this many hours a row is not a day and must not be presented as one.
+PARTIAL_BELOW_HOURS = 20.0
+
+
+def _interval_hours(previous: str, current: str) -> float | None:
+    """Hours between two ISO timestamps, or None if either is unparseable."""
+    try:
+        start = datetime.fromisoformat(previous)
+        end = datetime.fromisoformat(current)
+    except (TypeError, ValueError):
+        return None
+    return (end - start).total_seconds() / 3600.0
 
 
 @dataclass
@@ -196,6 +210,7 @@ def resolve(conn: sqlite3.Connection, cfg: Config) -> dict:
     skipped = 0
     low_confidence = 0
     restocks = 0
+    partials = 0
 
     for product in db.tracked_products(conn):
         product_id = product["product_id"]
@@ -206,6 +221,13 @@ def resolve(conn: sqlite3.Connection, cfg: Config) -> dict:
 
         curr, prev = snaps[0], snaps[1]
         day = curr["day"]
+
+        # The interval a row actually covers. Two pulls twenty minutes apart
+        # produce a real delta, but calling it a day would be a lie, so the
+        # gap is recorded and short rows are flagged partial rather than
+        # scaled up from a tiny sample.
+        interval_hours = _interval_hours(prev["captured_at"], curr["captured_at"])
+        partial = interval_hours is not None and interval_hours < PARTIAL_BELOW_HOURS
 
         curr_skus = {
             r["sku_id"]: dict(r) for r in db.skus_at(conn, product_id, curr["captured_at"])
@@ -246,13 +268,15 @@ def resolve(conn: sqlite3.Connection, cfg: Config) -> dict:
             """
             INSERT INTO daily_result
                 (product_id, day, units, revenue, method, confidence, restock,
-                 provisional, unattributed, sold_delta, stock_delta)
-            VALUES (?,?,?,?,?,?,?,?,?,?,?)
+                 provisional, unattributed, sold_delta, stock_delta,
+                 interval_hours, partial)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)
             ON CONFLICT(product_id, day) DO UPDATE SET
                 units=excluded.units, revenue=excluded.revenue, method=excluded.method,
                 confidence=excluded.confidence, restock=excluded.restock,
                 provisional=excluded.provisional, unattributed=excluded.unattributed,
-                sold_delta=excluded.sold_delta, stock_delta=excluded.stock_delta
+                sold_delta=excluded.sold_delta, stock_delta=excluded.stock_delta,
+                interval_hours=excluded.interval_hours, partial=excluded.partial
             """,
             (
                 product_id,
@@ -266,6 +290,8 @@ def resolve(conn: sqlite3.Connection, cfg: Config) -> dict:
                 attr.unattributed,
                 units.sold_delta,
                 units.stock_delta,
+                round(interval_hours, 3) if interval_hours is not None else None,
+                int(partial),
             ),
         )
 
@@ -295,10 +321,13 @@ def resolve(conn: sqlite3.Connection, cfg: Config) -> dict:
             restocks += 1
         if attr.confidence < 0.3:
             low_confidence += 1
+        if partial:
+            partials += 1
 
     return {
         "written": written,
         "skipped": skipped,
         "restocks": restocks,
         "low_confidence": low_confidence,
+        "partials": partials,
     }

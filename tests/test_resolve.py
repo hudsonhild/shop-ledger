@@ -137,5 +137,34 @@ class Attribute(unittest.TestCase):
         self.assertFalse(result.provisional)
 
 
+class Interval(unittest.TestCase):
+    """A reading taken twenty minutes apart is real, but it is not a day."""
+
+    def test_measures_the_gap_between_snapshots(self):
+        from shopledger.resolve import _interval_hours
+
+        hours = _interval_hours("2026-09-14T02:00:00+00:00", "2026-09-15T02:00:00+00:00")
+        self.assertAlmostEqual(hours, 24.0)
+
+    def test_short_gap_is_below_the_partial_threshold(self):
+        from shopledger.resolve import PARTIAL_BELOW_HOURS, _interval_hours
+
+        hours = _interval_hours("2026-09-14T04:30:00+00:00", "2026-09-14T04:50:00+00:00")
+        self.assertAlmostEqual(hours, 1 / 3, places=3)
+        self.assertLess(hours, PARTIAL_BELOW_HOURS)
+
+    def test_a_normal_daily_gap_is_not_partial(self):
+        from shopledger.resolve import PARTIAL_BELOW_HOURS, _interval_hours
+
+        hours = _interval_hours("2026-09-14T02:00:00+00:00", "2026-09-15T02:07:00+00:00")
+        self.assertGreater(hours, PARTIAL_BELOW_HOURS)
+
+    def test_unparseable_timestamps_return_none_rather_than_raising(self):
+        from shopledger.resolve import _interval_hours
+
+        self.assertIsNone(_interval_hours("not a date", "2026-09-14T02:00:00+00:00"))
+        self.assertIsNone(_interval_hours(None, None))
+
+
 if __name__ == "__main__":
     unittest.main()

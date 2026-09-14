@@ -111,6 +111,11 @@ def cmd_resolve(args: argparse.Namespace) -> int:
     )
     if result["restocks"]:
         _say(f"  {result['restocks']} restock flags, stock delta unusable on those rows")
+    if result["partials"]:
+        _say(
+            f"  {result['partials']} rows cover less than 20 hours and are flagged partial, "
+            f"so they are not presented as a full day"
+        )
     if result["low_confidence"]:
         _say(f"  {result['low_confidence']} rows below 0.3 confidence, reported as unattributed")
     return 0

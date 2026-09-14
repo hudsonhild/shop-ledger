@@ -263,9 +263,26 @@ def page_index(site: Site) -> str:
     panel = conn.execute("SELECT COUNT(*) AS n FROM product WHERE tier='tracked'").fetchone()["n"]
     window = f"Last {len(site.days)} days" if site.days else "Last 7 days"
 
+    partial_note = ""
+    if latest:
+        row = conn.execute(
+            "SELECT COUNT(*) AS n, AVG(interval_hours) AS h FROM daily_result "
+            "WHERE day = ? AND partial = 1",
+            (latest,),
+        ).fetchone()
+        if row["n"]:
+            hours = row["h"] or 0
+            partial_note = (
+                f'<p class="note">{row["n"]} of these rows were measured over about '
+                f"{hours:.1f} hours rather than a full day, because two pulls ran close "
+                f"together. They are real readings over a real interval, just not daily "
+                f"ones, and they are flagged partial everywhere they appear.</p>"
+            )
+
     content = f"""
       <p class="eyebrow">{esc(day_label)}</p>
       <h1>{headline}</h1>
+      {partial_note}
       <div class="ctlbar">
         <span class="ctl">{icon("calendar", 14)}<span class="lbl">Window</span>{esc(window)}</span>
         <span class="ctl"><span class="lbl">Granularity</span>Day</span>
@@ -298,6 +315,7 @@ def page_products(site: Site) -> str:
         """
         SELECT p.product_id, p.title, p.image_url, p.seller_name, p.category_name,
                r.units, r.revenue, r.method, r.confidence, r.unattributed,
+               r.interval_hours, r.partial,
                (SELECT sold_count FROM product_snapshot s
                  WHERE s.product_id = p.product_id AND s.sold_count IS NOT NULL
                  ORDER BY captured_at DESC LIMIT 1) AS sold,
@@ -316,6 +334,11 @@ def page_products(site: Site) -> str:
     for row in rows:
         search = f"{row['title']} {row['seller_name'] or ''} {row['category_name'] or ''}".lower()
         rating = f"{row['rating']:.1f}" if row["rating"] else "---"
+        partial = (
+            f' <span class="badge flat">{row["interval_hours"]:.1f}h</span>'
+            if row["partial"]
+            else ""
+        )
         body.append(
             f'<tr data-search="{esc(search)}">'
             f'<td class="prod"><div class="wrap">{thumb(row["image_url"])}'
@@ -328,7 +351,8 @@ def page_products(site: Site) -> str:
             f'<td class="n" data-sort="{row["revenue"] or 0}">{money(row["revenue"])}</td>'
             f'<td class="n" data-sort="{row["sold"] or 0}">{short(row["sold"])}</td>'
             f'<td class="n" data-sort="{row["rating"] or 0}">{rating}</td>'
-            f'<td data-sort="{esc(row["method"] or "")}">{esc(row["method"] or "---")}</td>'
+            f'<td data-sort="{esc(row["method"] or "")}">'
+            f"{esc(row['method'] or '---')}{partial}</td>"
             f'<td class="n" data-sort="{row["confidence"] or 0}">'
             f"{confidence_badge(row['confidence'], row['unattributed'] or 0)}</td>"
             f"</tr>"
@@ -437,6 +461,12 @@ def page_product(site: Site, product) -> str:
         else "---"
     )
     deltas = f"{exact(latest['sold_delta'])} vs {exact(latest['stock_delta'])}" if latest else "---"
+    if latest and latest["interval_hours"]:
+        window = f"{latest['interval_hours']:.1f} hours"
+        if latest["partial"]:
+            window += ' <span class="badge flat">partial, not a full day</span>'
+    else:
+        window = "---"
     facts = [
         ("Seller", esc(product["seller_name"] or "unknown")),
         ("Category", esc(product["category_name"] or "unknown")),
@@ -450,6 +480,7 @@ def page_product(site: Site, product) -> str:
             confidence_badge(latest["confidence"], latest["unattributed"]) if latest else "---",
         ),
         ("Sold vs stock delta", deltas),
+        ("Measured over", window),
     ]
     kv = "".join(f"<dt>{k}</dt><dd>{v}</dd>" for k, v in facts)
 
@@ -646,6 +677,7 @@ def _health_units(site: Site) -> str:
         "Restock flags": 0,
         "Low confidence": 0,
         "Provisional": 0,
+        "Partial intervals": 0,
         "Unattributed units": 0,
     }
     if day:
@@ -654,6 +686,7 @@ def _health_units(site: Site) -> str:
             SELECT SUM(restock) AS restocks,
                    SUM(CASE WHEN confidence < 0.3 THEN 1 ELSE 0 END) AS low,
                    SUM(provisional) AS prov,
+                   SUM(partial) AS part,
                    SUM(unattributed) AS unattr
             FROM daily_result WHERE day = ?
             """,
@@ -663,6 +696,7 @@ def _health_units(site: Site) -> str:
             "Restock flags": row["restocks"] or 0,
             "Low confidence": row["low"] or 0,
             "Provisional": row["prov"] or 0,
+            "Partial intervals": row["part"] or 0,
             "Unattributed units": row["unattr"] or 0,
         }
 
@@ -711,7 +745,8 @@ def page_health(site: Site) -> str:
         conn.execute(
             """
             SELECT r.*, p.title FROM daily_result r JOIN product p ON p.product_id = r.product_id
-            WHERE r.day = ? AND (r.restock = 1 OR r.confidence < 0.3 OR r.provisional = 1)
+            WHERE r.day = ?
+              AND (r.restock = 1 OR r.confidence < 0.3 OR r.provisional = 1 OR r.partial = 1)
             ORDER BY r.revenue DESC LIMIT 50
             """,
             (site.latest,),
@@ -728,6 +763,8 @@ def page_health(site: Site) -> str:
             reasons.append("low confidence")
         if row["provisional"]:
             reasons.append("provisional")
+        if row["partial"]:
+            reasons.append(f"partial {row['interval_hours']:.1f}h")
         flag_rows.append(
             f'<tr><td class="prod"><a class="t" '
             f'href="products/{esc(row["product_id"])}.html">{esc(row["title"])}</a></td>'

@@ -30,10 +30,26 @@ def connect(path: Path) -> sqlite3.Connection:
     return conn
 
 
+# Columns added after 0.1.0. Existing databases are migrated in place rather
+# than asking anyone to start their history over.
+MIGRATIONS: list[tuple[str, str, str]] = [
+    ("daily_result", "interval_hours", "REAL"),
+    ("daily_result", "partial", "INTEGER NOT NULL DEFAULT 0"),
+]
+
+
+def _migrate(conn: sqlite3.Connection) -> None:
+    for table, column, decl in MIGRATIONS:
+        existing = {r["name"] for r in conn.execute(f"PRAGMA table_info({table})")}
+        if column not in existing:
+            conn.execute(f"ALTER TABLE {table} ADD COLUMN {column} {decl}")
+
+
 def init(path: Path) -> sqlite3.Connection:
     conn = connect(path)
     sql = resources.files("shopledger").joinpath("schema.sql").read_text(encoding="utf-8")
     conn.executescript(sql)
+    _migrate(conn)
     conn.commit()
     return conn
 
