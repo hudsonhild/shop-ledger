@@ -1,4 +1,5 @@
-# Discovery sweep, repointed 2026-09-15 at the Ecom shortlist.
+# Discovery sweep, repointed 2026-09-15 at the Ecom shortlist and widened
+# the same day past apparel into consumables, supplements and beauty.
 # Terms derive from the 25 scored candidates in
 # 02 Ventures/Ecom/runs/2026-09-15-shopfirst/research/ranked-products.json,
 # so the tracked panel is the shortlist plus what it competes against,
@@ -7,6 +8,13 @@
 # One keyword per line, blank lines and # ignored.
 # Each line costs 1 credit per run and returns up to ~39 products.
 # The previous generic list is kept at docs/keywords-generic.txt.
+#
+# The apparel block below traces to the 2026-09-15 shortlist. That shortlist
+# is apparel-only because the FastMoss harvest behind it requested five
+# fashion categories and nothing else, not because apparel is the product
+# space. The blocks after it correct that at the sweep layer; the next
+# FastMoss harvest should slice Health, Beauty & Personal Care, Food &
+# Beverages and Home Supplies too.
 
 # Bras and underwear, ranks 1, 3, 4, 6
 sticky bra
@@ -47,3 +55,43 @@ magnetic glasses holder
 ruched boots
 fuzzy slippers
 pointed toe heels
+
+# ---------------------------------------------------------------------------
+# Consumables and repeat-purchase categories, added 2026-09-15.
+# These are here for the reason apparel is not: a consumable is bought again.
+# ---------------------------------------------------------------------------
+
+# Supplements, ingestible. Check the TGA position at sourcing, not here.
+creatine gummies
+magnesium glycinate
+ashwagandha gummies
+sea moss gel
+electrolyte powder
+greens powder
+collagen powder
+sleep gummies
+
+# Makeup
+lip oil
+cream blush
+setting spray
+brow pen
+press on nails
+liquid concealer
+
+# Skincare, repeat purchase
+hyaluronic acid serum
+retinol cream
+pimple patches
+sunscreen stick
+body scrub
+
+# Hair and oral
+rosemary hair oil
+hair growth serum
+teeth whitening kit
+tongue scraper
+
+# Home consumables
+laundry detergent sheets
+toilet cleaning tablets
