@@ -51,7 +51,7 @@ def cmd_sweep(args: argparse.Namespace) -> int:
     with db.session(cfg.db_path) as conn:
         db.start_run(conn, run_id, "sweep", client.credits)
         result = sweep.sweep(conn, client, keywords)
-        promoted = sweep.promote(conn, cfg.panel_size)
+        promoted = sweep.promote(conn, cfg.panel_size, cfg.panel_stale_days)
         db.finish_run(conn, run_id, client.credits, client.calls, len(result["failures"]), "sweep")
 
     _say(

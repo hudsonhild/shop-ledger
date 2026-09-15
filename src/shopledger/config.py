@@ -42,6 +42,7 @@ class Config:
     engagement_k: float
     panel_window_days: int
     panel_budget: int
+    panel_stale_days: int
 
     @property
     def db_path(self) -> Path:
@@ -91,4 +92,5 @@ def load(require_key: bool = True) -> Config:
         engagement_k=_num("SHOPLEDGER_ENGAGEMENT_K", 10),
         panel_window_days=int(_num("SHOPLEDGER_PANEL_WINDOW_DAYS", 14)),
         panel_budget=int(_num("SHOPLEDGER_PANEL_BUDGET", 25)),
+        panel_stale_days=int(_num("SHOPLEDGER_PANEL_STALE_DAYS", 3)),
     )

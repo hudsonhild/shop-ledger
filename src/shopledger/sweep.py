@@ -8,6 +8,7 @@ detail pull.
 from __future__ import annotations
 
 import sqlite3
+from datetime import UTC, datetime, timedelta
 from importlib import resources
 from pathlib import Path
 
@@ -71,33 +72,54 @@ def sweep(conn: sqlite3.Connection, client: Client, keywords: list[str]) -> dict
     return {"keywords": len(keywords), "products": len(seen), "failures": failures}
 
 
-def promote(conn: sqlite3.Connection, panel_size: int) -> dict:
-    """Rank the watchlist by sold_count delta and take the top N into tracked tier.
+def promote(conn: sqlite3.Connection, panel_size: int, stale_days: int = 3) -> dict:
+    """Rank the watchlist by recent sold_count delta and take the top N into tracked.
 
     Ranking by movement rather than lifetime volume is the whole point. A product
     that sold 600,000 units over two years is history; one that sold 4,000
     yesterday is a signal.
+
+    Two windows, and they do different jobs. The delta is measured over the last
+    ``stale_days`` so it reads as movement rather than history. Eligibility is
+    tighter: a product must have come back in the most recent sweep. Without that
+    second rule a product the keyword list no longer searches keeps the delta it
+    earned before it went quiet and blocks live movers out of the panel forever.
+    Editing keywords.txt is exactly when that bites.
     """
+    cutoff = (datetime.now(UTC) - timedelta(days=stale_days)).replace(microsecond=0).isoformat()
+    row = conn.execute(
+        "SELECT MAX(captured_at) AS at FROM product_snapshot WHERE source = 'sweep'"
+    ).fetchone()
+    last_sweep = (row["at"] if row else None) or cutoff
+
     rows = conn.execute(
         """
-        WITH bounds AS (
+        WITH recent AS (
+            SELECT ps.product_id, ps.captured_at, ps.sold_count
+            FROM product_snapshot ps
+            JOIN product p ON p.product_id = ps.product_id
+            WHERE ps.sold_count IS NOT NULL
+              AND ps.captured_at >= ?
+              AND p.last_seen    >= ?
+        ),
+        bounds AS (
             SELECT product_id,
                    MIN(captured_at) AS first_at,
                    MAX(captured_at) AS last_at,
                    COUNT(*)         AS n
-            FROM product_snapshot
-            WHERE sold_count IS NOT NULL
+            FROM recent
             GROUP BY product_id
             HAVING n >= 2
         )
         SELECT b.product_id,
-               (SELECT sold_count FROM product_snapshot
+               (SELECT sold_count FROM recent
                  WHERE product_id = b.product_id AND captured_at = b.last_at) -
-               (SELECT sold_count FROM product_snapshot
+               (SELECT sold_count FROM recent
                  WHERE product_id = b.product_id AND captured_at = b.first_at) AS delta
         FROM bounds b
         ORDER BY delta DESC
-        """
+        """,
+        (cutoff, last_sweep),
     ).fetchall()
 
     movers = [row["product_id"] for row in rows if (row["delta"] or 0) > 0][:panel_size]
@@ -110,11 +132,14 @@ def promote(conn: sqlite3.Connection, panel_size: int) -> dict:
             SELECT p.product_id
             FROM product p
             JOIN (SELECT product_id, MAX(sold_count) AS sc
-                  FROM product_snapshot GROUP BY product_id) s
+                  FROM product_snapshot
+                  WHERE captured_at >= ?
+                  GROUP BY product_id) s
               ON s.product_id = p.product_id
+            WHERE p.last_seen >= ?
             ORDER BY s.sc DESC LIMIT ?
             """,
-            (panel_size,),
+            (cutoff, last_sweep, panel_size),
         ).fetchall()
         movers = [row["product_id"] for row in fallback]
         cold = True
